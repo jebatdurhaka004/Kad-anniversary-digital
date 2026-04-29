@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GiftKita — Isi Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--pk:#FF3D7F;--pk2:#FF6B9D}
+html,body{min-height:100vh;overflow-x:hidden}
+body{font-family:'Nunito',sans-serif;background:#0d0d0d;color:#fff}
+.topbar{background:rgba(13,13,13,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.tb-back{display:flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.35);cursor:pointer;background:none;border:none;transition:color .2s}
+.tb-back:hover{color:#fff}
+.tb-logo{font-family:'Pacifico',cursive;font-size:1rem}
+.tb-tmpl{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:.28rem .75rem;border-radius:18px;color:rgba(255,255,255,.35)}
+.form-wrap{max-width:520px;margin:0 auto;padding:1.8rem 1.2rem 5rem}
+.tmpl-ind{display:flex;align-items:center;gap:.8rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.85rem 1.1rem;margin-bottom:1.6rem}
+.ti-ico{width:40px;height:40px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.ti-lbl{font-size:.6rem;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase}
+.ti-nm{font-size:.88rem;font-weight:800}
+.ti-chg{font-size:.6rem;color:rgba(255,255,255,.2);cursor:pointer;background:none;border:none;text-decoration:underline;margin-left:auto;transition:color .2s}
+.ti-chg:hover{color:rgba(255,255,255,.5)}
+.steps{display:flex;justify-content:center;gap:0;margin-bottom:1.8rem}
+.step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:1.5px;background:rgba(255,255,255,.07);z-index:0;transition:background .3s}
+.step.done:not(:last-child)::after{background:var(--pk)}
+.sdot{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:rgba(255,255,255,.22);transition:all .3s;z-index:1;position:relative}
+.step.done .sdot{background:var(--pk);border-color:var(--pk);color:#fff}
+.step.cur .sdot{background:rgba(255,61,127,.12);border-color:var(--pk);color:var(--pk);box-shadow:0 0 0 3px rgba(255,61,127,.1)}
+.slbl{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.18);margin-top:.28rem;letter-spacing:.05em}
+.step.done .slbl,.step.cur .slbl{color:var(--pk)}
+.card{background:rgba(255,255,255,.03);border-radius:16px;border:1px solid rgba(255,255,255,.07);padding:1.6rem 1.4rem;display:none;animation:fin .4s ease}
+.card.on{display:block}
+@keyframes fin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card-ico{font-size:1.4rem;margin-bottom:.35rem}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;color:#fff;margin-bottom:.12rem}
+.card-sub{font-size:.7rem;color:rgba(255,255,255,.25);margin-bottom:1.3rem}
+.f{margin-bottom:.85rem}
+.f label{display:block;font-size:.62rem;font-weight:800;color:var(--pk);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.3rem;opacity:.8}
+.f input,.f textarea{width:100%;padding:.7rem .9rem;border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:600;color:#fff;background:rgba(255,255,255,.05);outline:none;transition:border-color .2s,box-shadow .2s}
+.f input:focus,.f textarea:focus{border-color:var(--pk);box-shadow:0 0 0 3px rgba(255,61,127,.1)}
+.f input::placeholder,.f textarea::placeholder{color:rgba(255,255,255,.18)}
+.f textarea{resize:none;line-height:1.65}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.fhint{font-size:.58rem;color:rgba(255,255,255,.18);margin-top:.22rem;font-weight:600}
+.pugrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin-bottom:.6rem}
+.pi{aspect-ratio:1;border-radius:8px;overflow:hidden;position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:1rem;color:rgba(255,255,255,.12)}
+.pi img{width:100%;height:100%;object-fit:cover}
+.pirm{position:absolute;top:2px;right:2px;width:16px;height:16px;background:rgba(255,61,127,.85);border-radius:50%;border:none;color:#fff;font-size:.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.piadd{cursor:pointer;border:1px dashed rgba(255,255,255,.1);font-size:1.2rem}
+.pu{border:1px dashed rgba(255,255,255,.1);border-radius:10px;padding:.9rem;text-align:center;cursor:pointer;background:rgba(255,255,255,.02);position:relative;transition:all .22s}
+.pu:hover{border-color:var(--pk);background:rgba(255,61,127,.04)}
+.pu input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.video-tabs{display:flex;gap:.5rem;margin-bottom:.7rem}
+.vtab{flex:1;padding:.55rem;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.3);font-family:'Nunito',sans-serif;font-weight:700;font-size:.7rem;cursor:pointer;transition:all .2s}
+.vtab.on{background:rgba(255,61,127,.12);border-color:var(--pk);color:var(--pk)}
+.yt-tutorial{border-radius:12px;overflow:hidden;margin-bottom:.8rem;border:1px solid rgba(255,255,255,.08)}
+.ytt-head{background:linear-gradient(135deg,var(--pk),var(--pk2));padding:.65rem .9rem;display:flex;align-items:center;gap:.5rem}
+.ytt-body{background:rgba(255,255,255,.03);padding:.8rem .9rem;display:flex;flex-direction:column;gap:0}
+.ytt-step{display:flex;gap:.7rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.ytt-step:last-child{border-bottom:none}
+.ytt-num{width:22px;height:22px;border-radius:50%;background:var(--pk);display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:900;color:#fff;flex-shrink:0;margin-top:.1rem}
+.ytt-num.green{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.ytt-title{font-size:.75rem;font-weight:800;color:#fff;margin-bottom:.15rem}
+.ytt-desc{font-size:.68rem;color:rgba(255,255,255,.4);line-height:1.55}
+.url-mock{background:rgba(0,0,0,.4);border-radius:7px;padding:.45rem .65rem;margin-top:.3rem;font-size:.62rem;font-family:monospace;color:rgba(255,255,255,.45);word-break:break-all;border:1px solid rgba(255,255,255,.06)}
+.yt-input-wrap .f input{font-family:monospace;font-size:.82rem}
+.yt-status{display:none;margin-top:.45rem;border-radius:8px;padding:.45rem .75rem;align-items:center;gap:.55rem}
+.yt-status.ok{display:flex;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}
+.yt-status.err{display:flex;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18)}
+.cdots{display:flex;gap:.5rem;flex-wrap:wrap;padding:.2rem 0}
+.cdot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .2s}
+.cdot.on{border-color:#fff;box-shadow:0 0 0 2.5px var(--sc,#FF3D7F);transform:scale(1.15)}
+.brow{display:flex;gap:.7rem;margin-top:1.4rem}
+.bnxt{flex:1;padding:.85rem;border-radius:50px;border:none;background:linear-gradient(135deg,var(--pk),var(--pk2));color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 5px 18px rgba(255,61,127,.22);transition:all .3s}
+.bnxt:hover{transform:translateY(-2px)}
+.bbk{padding:.85rem 1.3rem;border-radius:50px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.35);font-family:'Nunito',sans-serif;font-weight:800;font-size:.75rem;cursor:pointer;transition:all .3s}
+.bbk:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+.bgen{width:100%;padding:1.05rem;border-radius:50px;border:none;background:linear-gradient(135deg,var(--pk),var(--pk2),#c44dff);color:#fff;font-family:'Pacifico',cursive;font-size:1.1rem;cursor:pointer;box-shadow:0 8px 28px rgba(255,61,127,.28);transition:all .35s;margin-top:1.4rem}
+.bgen:hover{transform:translateY(-2px) scale(1.02)}
+.bgen:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.bgen-spin{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.modal-bg.on{display:flex;animation:mfin .3s ease}
+@keyframes mfin{from{opacity:0}to{opacity:1}}
+.modal{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:2rem 1.8rem;max-width:420px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.5);animation:msfin .4s cubic-bezier(.22,1,.36,1)}
+@keyframes msfin{from{transform:scale(.9) translateY(20px)}to{transform:none}}
+.modal-ico{font-size:2.5rem;margin-bottom:.7rem;animation:bounce 1s ease infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;color:#fff;margin-bottom:.3rem}
+.modal-sub{font-size:.78rem;color:rgba(255,255,255,.3);margin-bottom:1.4rem}
+.link-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.85rem 1rem;display:flex;align-items:center;gap:.6rem;margin-bottom:1.1rem}
+.link-txt{flex:1;font-size:.7rem;font-weight:700;color:rgba(255,255,255,.65);word-break:break-all;text-align:left}
+.link-copy{background:linear-gradient(135deg,var(--pk),var(--pk2));color:#fff;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:.62rem;padding:.42rem .85rem;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all .2s}
+.modal-btns{display:flex;gap:.7rem}
+.mbtn-open{flex:1;padding:.75rem;border-radius:50px;border:none;background:linear-gradient(135deg,var(--pk),var(--pk2));color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.mbtn-new{padding:.75rem 1.1rem;border-radius:50px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.35);font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="tb-back" id="tb-back" onclick="goBack()">← Balik</button>
+  <span class="tb-logo">GiftKita 🎀</span>
+  <span class="tb-tmpl" id="tb-tmpl">Template</span>
+</div>
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-ico">🎀</div>
+    <p class="modal-title">Website Siap!</p>
+    <p class="modal-sub">Hantar link ni kepada orang istimewa 💕</p>
+    <div class="link-box"><p class="link-txt" id="modal-link">...</p><button class="link-copy" onclick="copyLink()">📋 Copy</button></div>
+    <div class="modal-btns">
+      <button class="mbtn-open" onclick="openGift()">🎀 Buka Hadiah</button>
+      <button class="mbtn-new" onclick="resetForm()">+ Baru</button>
+    </div>
+  </div>
+</div>
+<div class="form-wrap">
+  <div class="tmpl-ind">
+    <div class="ti-ico" id="ti-ico">🎀</div>
+    <div><p class="ti-lbl">Template Dipilih</p><p class="ti-nm" id="ti-nm">...</p></div>
+    <button class="ti-chg" onclick="goBack()">Tukar →</button>
+  </div>
+  <div class="steps">
+    <div class="step cur" id="stp1"><div class="sdot">1</div><div class="slbl">Info</div></div>
+    <div class="step" id="stp2"><div class="sdot">2</div><div class="slbl">Ucapan</div></div>
+    <div class="step" id="stp3"><div class="sdot">3</div><div class="slbl">Media</div></div>
+    <div class="step" id="stp4"><div class="sdot">4</div><div class="slbl">Lagu</div></div>
+    <div class="step" id="stp5"><div class="sdot">5</div><div class="slbl">Jana</div></div>
+  </div>
+  <!-- STEP 1 -->
+  <div class="card on" id="s1">
+    <div class="card-ico">💑</div><p class="card-title">Maklumat Asas</p><p class="card-sub" id="s1-sub">Isi maklumat penerima hadiah</p>
+    <div class="f"><label>Nama Kamu</label><input id="n1" placeholder="Nama kamu"></div>
+    <div class="f"><label id="lbl-nama2">Nama Penerima</label><input id="n2" placeholder="Nama penerima"></div>
+    <div class="f"><label id="lbl-tarikh">Tarikh</label><input id="tr" placeholder="Contoh: 1 Januari 2025"></div>
+    <div class="f"><label>Berapa Tahun / Umur</label><input id="th" placeholder="Contoh: 5"></div>
+    <div class="brow"><button class="bnxt" onclick="nx(1)">Seterusnya →</button></div>
+  </div>
+  <!-- STEP 2 -->
+  <div class="card" id="s2">
+    <div class="card-ico">✍️</div><p class="card-title" id="s2-title">Tulis Ucapan</p><p class="card-sub">Tulis dari hati kamu 💕</p>
+    <div class="f"><label>Perenggan 1</label><textarea id="b1" rows="3"></textarea></div>
+    <div class="f"><label>Perenggan 2</label><textarea id="b2" rows="3"></textarea></div>
+    <div class="f"><label>Penutup Istimewa</label><textarea id="b3" rows="2"></textarea></div>
+    <div class="f"><label id="lbl-sticky">Nota Kecil (1 baris = 1 nota, maks 6)</label><textarea id="bng" rows="6"></textarea></div>
+    <div class="brow"><button class="bbk" onclick="bk(2)">← Balik</button><button class="bnxt" onclick="nx(2)">Seterusnya →</button></div>
+  </div>
+  <!-- STEP 3 -->
+  <div class="card" id="s3">
+    <div class="card-ico">📸</div><p class="card-title">Gambar & Video</p><p class="card-sub">Upload gambar kenangan (maks 6) + video optional</p>
+    <div class="f">
+      <label>Gambar (Maks 6)</label>
+      <div class="pugrid" id="pgrid"></div>
+      <div class="pu" onclick="tu()">
+        <input type="file" id="fph" accept="image/*" multiple onchange="hp(event)" style="display:none">
+        <div style="font-size:1.3rem">📷</div>
+        <p style="font-size:.7rem;font-weight:700;color:rgba(255,255,255,.35);margin-top:.2rem">Upload gambar</p>
+        <p style="font-size:.58rem;color:rgba(255,255,255,.15);font-weight:600">JPG / PNG</p>
+      </div>
+      <div class="f" style="margin-top:.7rem"><label>Label Gambar (pisah koma)</label><input id="lbs" value="Gambar 1, Gambar 2, Gambar 3, Gambar 4, Gambar 5, Gambar 6"></div>
+    </div>
+    <div class="f" style="margin-top:.5rem">
+      <label>Video (Optional)</label>
+      <div class="video-tabs">
+        <button class="vtab on" id="vtab-upload" onclick="switchVTab('upload')">📁 Upload Video</button>
+        <button class="vtab" id="vtab-link" onclick="switchVTab('link')">🔗 Link Video</button>
+      </div>
+      <div id="video-upload-area">
+        <div class="pu" onclick="tuVideo()">
+          <input type="file" id="fvid" accept="video/*" onchange="hv(event)" style="display:none">
+          <div style="font-size:1.3rem">🎥</div>
+          <p style="font-size:.7rem;font-weight:700;color:rgba(255,255,255,.35);margin-top:.2rem">Upload video</p>
+          <p style="font-size:.58rem;color:rgba(255,255,255,.15);font-weight:600">MP4 / MOV • Maks 50MB</p>
+        </div>
+        <div id="video-preview" style="display:none;margin-top:.5rem;background:rgba(255,255,255,.04);border-radius:8px;padding:.6rem .8rem;align-items:center;gap:.6rem">
+          <span style="font-size:1.2rem">🎥</span>
+          <div><p id="vid-name" style="font-size:.75rem;font-weight:700;color:#fff"></p><p style="font-size:.6rem;color:rgba(255,255,255,.3)">Video dipilih ✓</p></div>
+          <button onclick="clearVideo()" style="background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;margin-left:auto">✕</button>
+        </div>
+      </div>
+      <div id="video-link-area" style="display:none"><input id="video-link" placeholder="Paste link video (Google Drive, YouTube, dll)"><p class="fhint">Contoh: https://drive.google.com/file/d/...</p></div>
+    </div>
+    <div class="brow"><button class="bbk" onclick="bk(3)">← Balik</button><button class="bnxt" onclick="nx(3)">Seterusnya →</button></div>
+  </div>
+  <!-- STEP 4 -->
+  <div class="card" id="s4">
+    <div class="card-ico">🎵</div><p class="card-title">Tambah Lagu</p><p class="card-sub">Lagu akan autoplay bila buka hadiah 🎵</p>
+    <div class="yt-tutorial">
+      <div class="ytt-head"><span style="font-size:1rem">📖</span><div><p style="font-size:.72rem;font-weight:800;color:#fff">Cara Letak Lagu</p><p style="font-size:.58rem;color:rgba(255,255,255,.65)">4 langkah mudah</p></div></div>
+      <div class="ytt-body">
+        <div class="ytt-step"><div class="ytt-num">1</div><div><p class="ytt-title">Bukak YouTube 📱</p><p class="ytt-desc">Pergi <strong style="color:#fff">youtube.com</strong> atau app YouTube</p></div></div>
+        <div class="ytt-step"><div class="ytt-num">2</div><div><p class="ytt-title">Cari & Buka Lagu 🔍</p><p class="ytt-desc">Taip nama lagu dalam search bar</p></div></div>
+        <div class="ytt-step"><div class="ytt-num">3</div><div><p class="ytt-title">Copy Full Link 🔗</p><p class="ytt-desc">Copy full link dari address bar — contoh:</p><div class="url-mock">https://www.youtube.com/watch?v=FcOctsNXyjk</div><p style="font-size:.62rem;color:#22c55e;font-weight:700;margin-top:.3rem">✓ Copy semua — tak perlu pilih bahagian mana-mana!</p></div></div>
+        <div class="ytt-step"><div class="ytt-num green">✓</div><div><p class="ytt-title" style="color:#22c55e">Paste Dalam Kotak Di Bawah ✅</p><p class="ytt-desc">Sistem akan kesan ID lagu <strong style="color:#fff">secara automatik</strong></p></div></div>
+      </div>
+    </div>
+    <div class="f yt-input-wrap">
+      <label>Link atau ID YouTube</label>
+      <input id="yt-input" placeholder="Paste link YouTube atau ID di sini..." oninput="extractYT()">
+      <p class="fhint">Boleh paste full link ATAU ID je — kedua-dua boleh!</p>
+      <div class="yt-status ok" id="yt-ok"><span>✅</span><div><p style="font-size:.7rem;font-weight:800;color:#22c55e">Berjaya! ID lagu dah dikesan</p><p style="font-size:.58rem;color:rgba(34,197,94,.6)">ID: <span id="yt-id-display"></span></p></div></div>
+      <div class="yt-status err" id="yt-err"><span>❌</span><p style="font-size:.7rem;font-weight:700;color:#ef4444">Link tak sah. Cuba semak balik.</p></div>
+      <input type="hidden" id="lid" value="">
+    </div>
+    <div class="frow">
+      <div class="f"><label>Nama Lagu</label><input id="lnm" placeholder="Cinta Luar Biasa"></div>
+      <div class="f"><label>Nama Artis</label><input id="lat" placeholder="Andmesh Kamaleng"></div>
+    </div>
+    <div class="brow"><button class="bbk" onclick="bk(4)">← Balik</button><button class="bnxt" onclick="nx(4)">Seterusnya →</button></div>
+  </div>
+  <!-- STEP 5 -->
+  <div class="card" id="s5">
+    <div class="card-ico">🎨</div><p class="card-title">Warna & Jana</p><p class="card-sub">Pilih warna tema dan jana website!</p>
+    <div class="f">
+      <label>Pilih Warna Tema</label>
+      <div class="cdots">
+        <div class="cdot on" data-pk="#FF3D7F" data-p2="#FF6B9D" data-pb="#FFB3D1" data-bk="#FFF0F5" style="background:#FF3D7F;--sc:#FF3D7F" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#E91E8C" data-p2="#F06292" data-pb="#F8BBD9" data-bk="#FCE4EC" style="background:#E91E8C" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#9C27B0" data-p2="#BA68C8" data-pb="#E1BEE7" data-bk="#F3E5F5" style="background:#9C27B0" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#c0392b" data-p2="#e74c3c" data-pb="#f1948a" data-bk="#fff5f5" style="background:#c0392b" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#1565C0" data-p2="#64B5F6" data-pb="#BBDEFB" data-bk="#E3F2FD" style="background:#1565C0" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#059669" data-p2="#34d399" data-pb="#a7f3d0" data-bk="#f0fdf4" style="background:#059669" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#c9a96e" data-p2="#e8d5a3" data-pb="#a07840" data-bk="#0a0a0a" style="background:#c9a96e" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#7C3AED" data-p2="#A78BFA" data-pb="#DDD6FE" data-bk="#F5F3FF" style="background:#7C3AED" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#ca8a04" data-p2="#eab308" data-pb="#fde68a" data-bk="#fefce8" style="background:#ca8a04" onclick="pc(this)"></div>
+        <div class="cdot" data-pk="#6366f1" data-p2="#818cf8" data-pb="#c7d2fe" data-bk="#eef2ff" style="background:#6366f1" onclick="pc(this)"></div>
+      </div>
+    </div>
+    <button class="bgen" id="bgen" onclick="generate()">
+      <span id="bgen-txt">🎀 Jana Website Hadiah!</span>
+      <div class="bgen-spin" id="bgen-spin"></div>
+    </button>
+    <div class="brow" style="margin-top:.8rem"><button class="bbk" onclick="bk(5)" style="width:100%">← Balik</button></div>
+  </div>
+</div>
+<script>
+/* ═══════════════════════════════════════════════════════
+   GiftKita — Template Database
+   Untuk tambah template baru, copy satu block dan edit!
+═══════════════════════════════════════════════════════ */
+
+const KATEGORI = [
+  { id:'birthday',     nama:'Birthday',     icon:'🎂', desc:'Hadiah hari jadi yang istimewa',     warna:'#FF6B6B' },
+  { id:'anniversary',  nama:'Anniversary',  icon:'💕', desc:'Raikan cinta yang indah',            warna:'#FF3D7F' },
+  { id:'raya',         nama:'Hari Raya',    icon:'🌙', desc:'Ucapan raya yang bermakna',          warna:'#2d8a4e' },
+  { id:'kawan',        nama:'Untuk Kawan',  icon:'👫', desc:'Hadiah untuk sahabat tersayang',     warna:'#7C3AED' },
+];
+
+const TEMPLATES = [
+
+  /* ══════════════════════
+     🎂 BIRTHDAY
+  ══════════════════════ */
+  {
+    id: 'birthday-confetti',
+    kategori: 'birthday',
+    nama: 'Confetti Party',
+    tagline: 'Fun & Colorful',
+    icon: '🎉',
+    preview_bg: 'linear-gradient(135deg,#FF6B6B,#FFE66D,#4ECDC4)',
+    preview_text: '#fff',
+    theme: {
+      font_title: 'Pacifico',
+      font_body: 'Nunito',
+      pk: '#FF6B6B',
+      p2: '#FF8E8E',
+      pb: '#FFB3B3',
+      bk: '#FFF5F5',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#FFB3B3,#FF6B6B)',
+      body_bg: 'linear-gradient(160deg,#fff5f5,#ffe4e4)',
+      menu_bg: '#FF6B6B',
+      paper_bg: '#fff',
+      pattern: 'confetti',
+    },
+    form_label: {
+      greeting: 'Kepada siapa hadiah ni?',
+      surat_title: 'Ucapan Birthday',
+      surat_b1_placeholder: 'Tulis ucapan birthday yang bermakna...',
+      surat_b2_placeholder: 'Apa yang kau sayang tentang dia...',
+      surat_b3_placeholder: 'Doa dan harapan untuk dia...',
+      sticky_title: 'Kata-kata untuk dia (1 baris = 1 nota)',
+      sticky_default: 'Semoga panjang umur dan murah rezeki 🎂\nMakin cantik/ensem makin hari 💕\nSemoga impian kau tercapai ✨\nKau layak untuk semua yang terbaik 🌟\nHappy Birthday! Enjoy your day 🎉\nSayang kau banyak-banyak 🫶',
+      tarikh_label: 'Tarikh Birthday',
+      tarikh_placeholder: '15 Mac 2000',
+      nama2_label: 'Nama orang yang bertuah 🎂',
+    }
+  },
+
+  {
+    id: 'birthday-pastel',
+    kategori: 'birthday',
+    nama: 'Pastel Dream',
+    tagline: 'Soft & Sweet',
+    icon: '🎀',
+    preview_bg: 'linear-gradient(135deg,#FFECD2,#FCB69F,#FF9A9E)',
+    preview_text: '#5a2040',
+    theme: {
+      font_title: 'Pacifico',
+      font_body: 'Nunito',
+      pk: '#FF9A9E',
+      p2: '#FECFEF',
+      pb: '#FFF0F5',
+      bk: '#FFF9FC',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#FECFEF,#FF9A9E)',
+      body_bg: 'linear-gradient(160deg,#fff9fc,#fff0f5)',
+      menu_bg: '#FF9A9E',
+      paper_bg: '#fff',
+      pattern: 'dots',
+    },
+    form_label: {
+      greeting: 'Kepada siapa hadiah ni?',
+      surat_title: 'Ucapan Birthday',
+      surat_b1_placeholder: 'Tulis ucapan birthday yang comel...',
+      surat_b2_placeholder: 'Kenangan indah bersama dia...',
+      surat_b3_placeholder: 'Wish yang paling ikhlas...',
+      sticky_title: 'Kata-kata manis untuk dia',
+      sticky_default: 'Kau adalah cahaya dalam hidup aku 🌟\nSemoga hari kau penuh kegembiraan 🎉\nKau makin cantik/ensem setiap tahun ✨\nDoa aku sentiasa untuk kau 🙏\nHappy Birthday gorgeous! 💕\nSayang kau selalu 🎀',
+      tarikh_label: 'Tarikh Birthday',
+      tarikh_placeholder: '15 Mac 2000',
+      nama2_label: 'Nama orang istimewa 🎀',
+    }
+  },
+
+  {
+    id: 'birthday-golden',
+    kategori: 'birthday',
+    nama: 'Golden Birthday',
+    tagline: 'Elegant & Special',
+    icon: '👑',
+    preview_bg: 'linear-gradient(135deg,#0a0a0a,#1a1208,#c9a96e)',
+    preview_text: '#c9a96e',
+    theme: {
+      font_title: 'Cormorant Garamond',
+      font_body: 'Nunito',
+      pk: '#c9a96e',
+      p2: '#e8d5a3',
+      pb: '#a07840',
+      bk: '#0a0a0a',
+      dark: true,
+      envelope_gradient: 'linear-gradient(145deg,#a07840,#c9a96e)',
+      body_bg: 'radial-gradient(ellipse at 50% 40%,#1a1208,#0a0a0a)',
+      menu_bg: '#c9a96e',
+      paper_bg: '#111',
+      pattern: 'grid',
+    },
+    form_label: {
+      greeting: 'Kepada siapa hadiah istimewa ni?',
+      surat_title: 'Ucapan Birthday Premium',
+      surat_b1_placeholder: 'Tulis ucapan yang bermakna dan istimewa...',
+      surat_b2_placeholder: 'Apa yang special tentang dia...',
+      surat_b3_placeholder: 'Kata-kata penutup yang bermakna...',
+      sticky_title: 'Kata-kata bermakna untuk dia',
+      sticky_default: 'Kau adalah insan yang luar biasa 👑\nSetiap hari bersamamu adalah hadiah ✨\nSemoga tahun ini penuh keberkatan 🌟\nKau layak untuk semua kebaikan dunia 💛\nHappy Birthday, legend! 🎂\nTerus bersinar dalam apa jua keadaan ⭐',
+      tarikh_label: 'Tarikh Birthday',
+      tarikh_placeholder: '15 Mac 2000',
+      nama2_label: 'Nama si legend 👑',
+    }
+  },
+
+  /* ══════════════════════
+     💕 ANNIVERSARY
+  ══════════════════════ */
+  {
+    id: 'anniversary-hellokitty',
+    kategori: 'anniversary',
+    nama: 'Hello Kitty',
+    tagline: 'Kawaii & Comel',
+    icon: '🎀',
+    preview_bg: 'linear-gradient(135deg,#FFB3D1,#FF6B9D,#FF3D7F)',
+    preview_text: '#fff',
+    theme: {
+      font_title: 'Pacifico',
+      font_body: 'Nunito',
+      pk: '#FF3D7F',
+      p2: '#FF6B9D',
+      pb: '#FFB3D1',
+      bk: '#FFF0F5',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#FFB3D1,#FF6B9D)',
+      body_bg: 'linear-gradient(160deg,#fff0f5,#ffe4ef)',
+      menu_bg: '#FF3D7F',
+      paper_bg: '#fff',
+      pattern: 'gingham',
+      hk_face: true,
+    },
+    form_label: {
+      greeting: 'Nama kamu & nama dia',
+      surat_title: 'Surat Cinta',
+      surat_b1_placeholder: 'Cerita permulaan cinta kamu...',
+      surat_b2_placeholder: 'Apa yang kamu sayang tentang dia...',
+      surat_b3_placeholder: 'Janji dan harapan untuk masa depan...',
+      sticky_title: 'Kata-kata untuk dia (6 sticky notes)',
+      sticky_default: 'Kamu baik hati dalam cara yang bermakna 🤍\nKamu kuat, walaupun benda jadi susah 💪\nKamu unik — itulah kelebihan kamu ✨\nKamu buat aku rasa disayangi 🌸\nKamu layak untuk semua kebaikan ⭐\nKamu jadi versi terbaik diri sendiri 🎀',
+      tarikh_label: 'Tarikh Mula Couple',
+      tarikh_placeholder: '23 April 2021',
+      nama2_label: 'Nama dia 💕',
+    }
+  },
+
+  {
+    id: 'anniversary-dark',
+    kategori: 'anniversary',
+    nama: 'Dark Luxury',
+    tagline: 'Elegant & Premium',
+    icon: '✦',
+    preview_bg: 'linear-gradient(135deg,#0a0a0a,#1a1208,#c9a96e)',
+    preview_text: '#c9a96e',
+    theme: {
+      font_title: 'Cormorant Garamond',
+      font_body: 'Nunito',
+      pk: '#c9a96e',
+      p2: '#e8d5a3',
+      pb: '#a07840',
+      bk: '#0a0a0a',
+      dark: true,
+      envelope_gradient: 'linear-gradient(145deg,#a07840,#c9a96e)',
+      body_bg: 'radial-gradient(ellipse at 50% 40%,#1a1208,#0a0a0a)',
+      menu_bg: '#1a1208',
+      paper_bg: '#111',
+      pattern: 'grid',
+    },
+    form_label: {
+      greeting: 'Nama kamu & nama dia',
+      surat_title: 'Surat Cinta Premium',
+      surat_b1_placeholder: 'Kisah cinta yang indah...',
+      surat_b2_placeholder: 'Apa yang istimewa tentang hubungan kamu...',
+      surat_b3_placeholder: 'Janji untuk masa depan...',
+      sticky_title: 'Kata-kata bermakna',
+      sticky_default: 'Kamu adalah sebab aku tersenyum setiap hari ✦\nCinta kita lebih dalam dari kata-kata 💛\nSetiap saat bersamamu adalah hadiah ⭐\nKamu lengkapkan dunia aku 🌙\nSelamanya dan lebih lagi ✨\nAku memilih kamu setiap hari 💫',
+      tarikh_label: 'Tarikh Mula Bersama',
+      tarikh_placeholder: '23 April 2021',
+      nama2_label: 'Nama dia 💛',
+    }
+  },
+
+  {
+    id: 'anniversary-romantic',
+    kategori: 'anniversary',
+    nama: 'Romantic Rose',
+    tagline: 'Merah & Penuh Cinta',
+    icon: '🌹',
+    preview_bg: 'linear-gradient(135deg,#2d0a0a,#6b1a1a,#c0392b)',
+    preview_text: '#fff',
+    theme: {
+      font_title: 'Dancing Script',
+      font_body: 'Nunito',
+      pk: '#c0392b',
+      p2: '#e74c3c',
+      pb: '#f1948a',
+      bk: '#fff5f5',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#f1948a,#c0392b)',
+      body_bg: 'radial-gradient(ellipse at 50% 40%,#2d0a0a,#1a0505)',
+      menu_bg: '#c0392b',
+      paper_bg: '#fff',
+      pattern: 'rose',
+    },
+    form_label: {
+      greeting: 'Nama kamu & nama dia',
+      surat_title: 'Surat Cinta',
+      surat_b1_placeholder: 'Kenangan indah pertama kamu bersama...',
+      surat_b2_placeholder: 'Betapa kamu menyayangi dia...',
+      surat_b3_placeholder: 'Impian kamu berdua...',
+      sticky_title: 'Kata-kata dari hati',
+      sticky_default: 'Kamu adalah cinta terhebat aku 🌹\nBersama kamu dunia lebih indah ❤️\nSetiap hari aku bersyukur ada kamu 💕\nCinta ini tak akan padam 🔥\nKamu rumah aku pulang 🏡\nSelamanya milik kamu 💍',
+      tarikh_label: 'Tarikh Mula Bersama',
+      tarikh_placeholder: '23 April 2021',
+      nama2_label: 'Nama dia 🌹',
+    }
+  },
+
+  /* ══════════════════════
+     🌙 HARI RAYA
+  ══════════════════════ */
+  {
+    id: 'raya-emas',
+    kategori: 'raya',
+    nama: 'Raya Emas',
+    tagline: 'Mewah & Berkat',
+    icon: '🌙',
+    preview_bg: 'linear-gradient(135deg,#0d1f0d,#1a3a1a,#c9a96e)',
+    preview_text: '#c9a96e',
+    theme: {
+      font_title: 'Cormorant Garamond',
+      font_body: 'Nunito',
+      pk: '#c9a96e',
+      p2: '#e8d5a3',
+      pb: '#a07840',
+      bk: '#0d1a0d',
+      dark: true,
+      envelope_gradient: 'linear-gradient(145deg,#1a3a1a,#c9a96e)',
+      body_bg: 'radial-gradient(ellipse at 50% 40%,#0d2a0d,#0a1a0a)',
+      menu_bg: '#0d2a0d',
+      paper_bg: '#111',
+      pattern: 'islamic',
+    },
+    form_label: {
+      greeting: 'Kepada siapa ucapan raya ni?',
+      surat_title: 'Ucapan Hari Raya',
+      surat_b1_placeholder: 'Ucapan Selamat Hari Raya...',
+      surat_b2_placeholder: 'Doa dan harapan di hari mulia ini...',
+      surat_b3_placeholder: 'Permohonan maaf dan penutup...',
+      sticky_title: 'Doa & Ucapan Raya',
+      sticky_default: 'Selamat Hari Raya Aidilfitri 🌙\nMaaf Zahir dan Batin 🙏\nSemoga tahun ini lebih berkat ✨\nTaqaballahu Minna Wa Minkum 🌟\nSemoga dimurahkan rezeki 💛\nMoga ukhuwah kita kekal abadi 🤝',
+      tarikh_label: 'Tarikh Raya',
+      tarikh_placeholder: '1 Syawal 1446H',
+      nama2_label: 'Nama penerima 🌙',
+    }
+  },
+
+  {
+    id: 'raya-hijau',
+    kategori: 'raya',
+    nama: 'Raya Hijau',
+    tagline: 'Segar & Meriah',
+    icon: '🌿',
+    preview_bg: 'linear-gradient(135deg,#064e3b,#065f46,#34d399)',
+    preview_text: '#fff',
+    theme: {
+      font_title: 'Pacifico',
+      font_body: 'Nunito',
+      pk: '#059669',
+      p2: '#34d399',
+      pb: '#a7f3d0',
+      bk: '#f0fdf4',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#a7f3d0,#059669)',
+      body_bg: 'linear-gradient(160deg,#f0fdf4,#dcfce7)',
+      menu_bg: '#059669',
+      paper_bg: '#fff',
+      pattern: 'ketupat',
+    },
+    form_label: {
+      greeting: 'Kepada siapa ucapan raya ni?',
+      surat_title: 'Ucapan Hari Raya',
+      surat_b1_placeholder: 'Ucapan raya yang meriah...',
+      surat_b2_placeholder: 'Kenangan indah hari raya bersama...',
+      surat_b3_placeholder: 'Doa dan harapan...',
+      sticky_title: 'Ucapan Raya',
+      sticky_default: 'Selamat Hari Raya! 🌿\nMaaf Zahir Batin 🙏\nSemoga rezeki melimpah ruah 💚\nMoga puasa kita diterima Allah ✨\nSemoga dikelilingi orang tersayang 🌟\nEid Mubarak! 🎊',
+      tarikh_label: 'Tarikh Raya',
+      tarikh_placeholder: '1 Syawal 1446H',
+      nama2_label: 'Nama penerima 🌿',
+    }
+  },
+
+  {
+    id: 'raya-klasik',
+    kategori: 'raya',
+    nama: 'Raya Klasik',
+    tagline: 'Tradisional & Ikhlas',
+    icon: '🪔',
+    preview_bg: 'linear-gradient(135deg,#7c2d12,#c2410c,#fed7aa)',
+    preview_text: '#fff',
+    theme: {
+      font_title: 'Cormorant Garamond',
+      font_body: 'Nunito',
+      pk: '#c2410c',
+      p2: '#ea580c',
+      pb: '#fed7aa',
+      bk: '#fff7ed',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#fed7aa,#c2410c)',
+      body_bg: 'linear-gradient(160deg,#fff7ed,#ffedd5)',
+      menu_bg: '#c2410c',
+      paper_bg: '#fff',
+      pattern: 'batik',
+    },
+    form_label: {
+      greeting: 'Kepada siapa ucapan raya ni?',
+      surat_title: 'Ucapan Hari Raya',
+      surat_b1_placeholder: 'Ucapan raya yang ikhlas...',
+      surat_b2_placeholder: 'Kenangan manis bersama...',
+      surat_b3_placeholder: 'Permohonan maaf yang tulus...',
+      sticky_title: 'Ucapan Penuh Makna',
+      sticky_default: 'Selamat Hari Raya Aidilfitri 🪔\nMohon Maaf Zahir Batin 🙏\nSemoga diberkati Allah SWT ✨\nRamadan yang berlalu penuh barakah 🌙\nMoga silaturrahim kekal terjaga 🤝\nAllahu Akbar! 🌟',
+      tarikh_label: 'Tarikh Raya',
+      tarikh_placeholder: '1 Syawal 1446H',
+      nama2_label: 'Nama penerima 🪔',
+    }
+  },
+
+  /* ══════════════════════
+     👫 UNTUK KAWAN
+  ══════════════════════ */
+  {
+    id: 'kawan-bestfriend',
+    kategori: 'kawan',
+    nama: 'Best Friend',
+    tagline: 'BFF Forever',
+    icon: '👯',
+    preview_bg: 'linear-gradient(135deg,#7C3AED,#A78BFA,#DDD6FE)',
+    preview_text: '#fff',
+    theme: {
+      font_title: 'Pacifico',
+      font_body: 'Nunito',
+      pk: '#7C3AED',
+      p2: '#A78BFA',
+      pb: '#DDD6FE',
+      bk: '#F5F3FF',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#DDD6FE,#7C3AED)',
+      body_bg: 'linear-gradient(160deg,#f5f3ff,#ede9fe)',
+      menu_bg: '#7C3AED',
+      paper_bg: '#fff',
+      pattern: 'stars',
+    },
+    form_label: {
+      greeting: 'Untuk kawan yang mana?',
+      surat_title: 'Pesan untuk Kawan',
+      surat_b1_placeholder: 'Kenangan indah bersama kawan ni...',
+      surat_b2_placeholder: 'Apa yang kau appreciate tentang dia...',
+      surat_b3_placeholder: 'Harapan untuk persahabatan kamu...',
+      sticky_title: 'Kata-kata untuk kawan baik',
+      sticky_default: 'Kau adalah kawan terbaik yang aku ada 👯\nTerima kasih selalu ada masa aku susah 🤝\nKau buat hidup aku lebih seronok 😂\nSayang kau sebagai kawan aku 💜\nSemoga persahabatan kita kekal lama ✨\nKau tak ternilai dalam hidup aku 🌟',
+      tarikh_label: 'Tarikh Kenali (Optional)',
+      tarikh_placeholder: 'Contoh: 2018',
+      nama2_label: 'Nama kawan kau 👯',
+    }
+  },
+
+  {
+    id: 'kawan-squad',
+    kategori: 'kawan',
+    nama: 'Squad Goals',
+    tagline: 'Geng & Gumbira',
+    icon: '🎊',
+    preview_bg: 'linear-gradient(135deg,#0ea5e9,#6366f1,#ec4899)',
+    preview_text: '#fff',
+    theme: {
+      font_title: 'Pacifico',
+      font_body: 'Nunito',
+      pk: '#6366f1',
+      p2: '#818cf8',
+      pb: '#c7d2fe',
+      bk: '#eef2ff',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#c7d2fe,#6366f1)',
+      body_bg: 'linear-gradient(160deg,#eef2ff,#e0e7ff)',
+      menu_bg: '#6366f1',
+      paper_bg: '#fff',
+      pattern: 'confetti',
+    },
+    form_label: {
+      greeting: 'Untuk siapa dalam squad?',
+      surat_title: 'Pesan Squad',
+      surat_b1_placeholder: 'Cerita best geng kamu...',
+      surat_b2_placeholder: 'Moment paling lawak/best bersama...',
+      surat_b3_placeholder: 'Harapan untuk squad...',
+      sticky_title: 'Kata-kata untuk squad',
+      sticky_default: 'Squad goals forever! 🎊\nGeng paling best dalam dunia 😎\nTerima kasih buat hidup aku meriah ✨\nKenangan bersama tak terlupakan 🌟\nRide or die! 🔥\nSayang korang semua 💙',
+      tarikh_label: 'Tahun Geng Terbentuk',
+      tarikh_placeholder: 'Contoh: 2019',
+      nama2_label: 'Nama kawan kau 🎊',
+    }
+  },
+
+  {
+    id: 'kawan-sahabat',
+    kategori: 'kawan',
+    nama: 'Sahabat',
+    tagline: 'Ikhlas & Bermakna',
+    icon: '🌻',
+    preview_bg: 'linear-gradient(135deg,#854d0e,#ca8a04,#fde68a)',
+    preview_text: '#fff',
+    theme: {
+      font_title: 'Dancing Script',
+      font_body: 'Nunito',
+      pk: '#ca8a04',
+      p2: '#eab308',
+      pb: '#fde68a',
+      bk: '#fefce8',
+      dark: false,
+      envelope_gradient: 'linear-gradient(145deg,#fde68a,#ca8a04)',
+      body_bg: 'linear-gradient(160deg,#fefce8,#fef9c3)',
+      menu_bg: '#ca8a04',
+      paper_bg: '#fff',
+      pattern: 'dots',
+    },
+    form_label: {
+      greeting: 'Untuk sahabat yang mana?',
+      surat_title: 'Pesan untuk Sahabat',
+      surat_b1_placeholder: 'Kenangan pertama kenal dia...',
+      surat_b2_placeholder: 'Apa yang kau hargai tentang dia...',
+      surat_b3_placeholder: 'Kata-kata penutup yang ikhlas...',
+      sticky_title: 'Kata-kata ikhlas untuk sahabat',
+      sticky_default: 'Kau lebih dari sekadar kawan 🌻\nTerima kasih jadi tempat aku bergantung 🤝\nKau faham aku tanpa perlu banyak cakap 💛\nSahabat sejati memang rare macam kau ✨\nDoa aku sentiasa untuk kau 🙏\nSelamanya aku ada untuk kau 🌟',
+      tarikh_label: 'Tarikh Kenali (Optional)',
+      tarikh_placeholder: 'Contoh: 2015',
+      nama2_label: 'Nama sahabat kau 🌻',
+    }
+  },
+
+,
+
+  // ══ PIXEL TEMPLATES ══
+  {
+    id: 'anniversary-pixel',
+    kategori: 'anniversary',
+    nama: 'Pixel Love',
+    tagline: 'Game Interactive 🎮',
+    icon: '🕹️',
+    preview_bg: 'linear-gradient(135deg,#1a0008,#e8003d,#ff6b8a)',
+    preview_text: '#fff',
+    gift_page: 'gift-pixel.html',
+    theme: {font_title:'Press Start 2P',font_body:'Nunito',pk:'#e8003d',p2:'#ff1a54',pb:'#ff6b8a',bk:'#fff5f0',dark:false,envelope_gradient:'linear-gradient(145deg,#ff6b8a,#e8003d)',body_bg:'#e8003d',menu_bg:'#e8003d',paper_bg:'#fff5f0',pattern:'dots',pixel:true},
+    form_label: {greeting:'Nama kamu & nama dia',surat_title:'Surat Cinta',surat_b1_placeholder:'Cerita permulaan cinta kamu...',surat_b2_placeholder:'Apa yang kamu sayang tentang dia...',surat_b3_placeholder:'Janji dan harapan...',sticky_title:'Kata-kata untuk dia (6 sticky notes)',sticky_default:'Kamu baik hati dalam cara yang bermakna 🤍\nKamu kuat, walaupun benda jadi susah 💪\nKamu unik — itulah kelebihan kamu ✨\nKamu buat aku rasa disayangi 🌸\nKamu layak untuk semua kebaikan ⭐\nKamu jadi versi terbaik diri sendiri 🎀',tarikh_label:'Tarikh Mula Couple',tarikh_placeholder:'23 April 2021',nama2_label:'Nama dia 💕'}
+  },
+  {
+    id: 'birthday-pixel',
+    kategori: 'birthday',
+    nama: 'Pixel Party',
+    tagline: 'Game Interactive 🎮',
+    icon: '🕹️',
+    preview_bg: 'linear-gradient(135deg,#1a0d00,#ff6b00,#ffb347)',
+    preview_text: '#fff',
+    gift_page: 'gift-pixel.html',
+    theme: {font_title:'Press Start 2P',font_body:'Nunito',pk:'#ff6b00',p2:'#ff8c00',pb:'#ffb347',bk:'#fff8f0',dark:false,envelope_gradient:'linear-gradient(145deg,#ffb347,#ff6b00)',body_bg:'#ff6b00',menu_bg:'#ff6b00',paper_bg:'#fff8f0',pattern:'confetti',pixel:true},
+    form_label: {greeting:'Kepada siapa hadiah ni?',surat_title:'Ucapan Birthday',surat_b1_placeholder:'Tulis ucapan birthday...',surat_b2_placeholder:'Apa yang kau sayang tentang dia...',surat_b3_placeholder:'Doa dan harapan...',sticky_title:'Kata-kata untuk dia',sticky_default:'Semoga panjang umur 🎂\nMakin cantik/ensem 💕\nSemoga impian tercapai ✨\nKau layak yang terbaik 🌟\nHappy Birthday! 🎉\nSayang kau banyak 🫶',tarikh_label:'Tarikh Birthday',tarikh_placeholder:'15 Mac 2000',nama2_label:'Nama orang bertuah 🎂'}
+  },
+  {
+    id: 'raya-pixel',
+    kategori: 'raya',
+    nama: 'Pixel Raya',
+    tagline: 'Game Interactive 🎮',
+    icon: '🕹️',
+    preview_bg: 'linear-gradient(135deg,#0a1a0a,#1a5c38,#c9a96e)',
+    preview_text: '#c9a96e',
+    gift_page: 'gift-pixel.html',
+    theme: {font_title:'Press Start 2P',font_body:'Nunito',pk:'#1a7a3a',p2:'#2ea855',pb:'#7dd4a0',bk:'#f0fdf4',dark:false,envelope_gradient:'linear-gradient(145deg,#7dd4a0,#1a7a3a)',body_bg:'#1a7a3a',menu_bg:'#1a7a3a',paper_bg:'#f0fdf4',pattern:'islamic',pixel:true},
+    form_label: {greeting:'Kepada siapa ucapan raya?',surat_title:'Ucapan Hari Raya',surat_b1_placeholder:'Ucapan Selamat Hari Raya...',surat_b2_placeholder:'Doa dan harapan...',surat_b3_placeholder:'Permohonan maaf...',sticky_title:'Doa & Ucapan Raya',sticky_default:'Selamat Hari Raya 🌙\nMaaf Zahir Batin 🙏\nSemoga lebih berkat ✨\nTaqaballahu Minna 🌟\nDimurahkan rezeki 💛\nUkhuwah kekal abadi 🤝',tarikh_label:'Tarikh Raya',tarikh_placeholder:'1 Syawal 1446H',nama2_label:'Nama penerima 🌙'}
+  },
+  {
+    id: 'kawan-pixel',
+    kategori: 'kawan',
+    nama: 'Pixel Friends',
+    tagline: 'Game Interactive 🎮',
+    icon: '🕹️',
+    preview_bg: 'linear-gradient(135deg,#0a0a2e,#3730a3,#818cf8)',
+    preview_text: '#fff',
+    gift_page: 'gift-pixel.html',
+    theme: {font_title:'Press Start 2P',font_body:'Nunito',pk:'#4338ca',p2:'#6366f1',pb:'#a5b4fc',bk:'#eef2ff',dark:false,envelope_gradient:'linear-gradient(145deg,#a5b4fc,#4338ca)',body_bg:'#4338ca',menu_bg:'#4338ca',paper_bg:'#eef2ff',pattern:'stars',pixel:true},
+    form_label: {greeting:'Untuk kawan yang mana?',surat_title:'Pesan untuk Kawan',surat_b1_placeholder:'Kenangan bersama kawan ni...',surat_b2_placeholder:'Apa yang kau appreciate...',surat_b3_placeholder:'Harapan untuk persahabatan...',sticky_title:'Kata-kata untuk kawan',sticky_default:'Kawan terbaik yang aku ada 👯\nSelalu ada masa aku susah 🤝\nBuat hidup lebih seronok 😂\nSayang kau sebagai kawan 💜\nPersahabatan kekal lama ✨\nKau tak ternilai 🌟',tarikh_label:'Tahun Kenal (Optional)',tarikh_placeholder:'Contoh: 2018',nama2_label:'Nama kawan kau 👯'}
+  }
+
+];
+
+/* ══════════════════════════════════════
+   Helper functions
+══════════════════════════════════════ */
+function getTemplateById(id){
+  return TEMPLATES.find(t => t.id === id);
+}
+function getTemplatesByKategori(kat){
+  return TEMPLATES.filter(t => t.kategori === kat);
+}
+function getKategoriById(id){
+  return KATEGORI.find(k => k.id === id);
+}
+
+function getTemplateById(id){return TEMPLATES.find(t=>t.id===id)}
+function getKategoriById(id){return [{id:'birthday',nama:'Birthday',icon:'🎂',warna:'#FF6B6B'},{id:'anniversary',nama:'Anniversary',icon:'💕',warna:'#FF3D7F'},{id:'raya',nama:'Hari Raya',icon:'🌙',warna:'#2d8a4e'},{id:'kawan',nama:'Untuk Kawan',icon:'👫',warna:'#7C3AED'}].find(k=>k.id===id)}
+const SB_URL='https://lejpuajafuenlfvlovfg.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlanB1YWphZnVlbmxmdmxvdmZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjYyNTAsImV4cCI6MjA5MjcwMjI1MH0.rwABj8DyY3dijUr5TurtMoemZgG2b9LgSHSicUMxMmc';
+let curTmpl=null,curKat=null;
+let D={pk:'#FF3D7F',p2:'#FF6B9D',pb:'#FFB3D1',bk:'#FFF0F5'};
+let generatedId=null;
+const pf=[];
+let videoFile=null;
+function init(){
+  const params=new URLSearchParams(window.location.search);
+  const tid=params.get('template')||localStorage.getItem('gk_template')||'anniversary-hellokitty';
+  const kid=params.get('kat')||localStorage.getItem('gk_kategori')||'anniversary';
+  curTmpl=getTemplateById(tid);
+  curKat=getKategoriById(kid);
+  if(!curTmpl){
+    console.log('Template not found:', tid, '- using default');
+    curTmpl=TEMPLATES[0];
+  }
+  if(!curKat) curKat={id:'anniversary',nama:'Anniversary',icon:'💕',warna:'#FF3D7F'};
+  document.getElementById('ti-ico').textContent=curTmpl.icon;
+  document.getElementById('ti-nm').textContent=curTmpl.nama;
+  document.getElementById('tb-tmpl').textContent=curTmpl.nama;
+  document.title=`GiftKita — ${curTmpl.nama}`;
+  document.documentElement.style.setProperty('--pk',curTmpl.theme.pk);
+  document.documentElement.style.setProperty('--pk2',curTmpl.theme.p2);
+  D={pk:curTmpl.theme.pk,p2:curTmpl.theme.p2,pb:curTmpl.theme.pb,bk:curTmpl.theme.bk};
+  const fl=curTmpl.form_label;
+  if(fl){
+    document.getElementById('lbl-nama2').textContent=fl.nama2_label||'Nama Penerima';
+    document.getElementById('lbl-tarikh').textContent=fl.tarikh_label||'Tarikh';
+    document.getElementById('tr').placeholder=fl.tarikh_placeholder||'';
+    document.getElementById('s2-title').textContent=fl.surat_title||'Tulis Ucapan';
+    document.getElementById('b1').placeholder=fl.surat_b1_placeholder||'Tulis di sini...';
+    document.getElementById('b2').placeholder=fl.surat_b2_placeholder||'Tulis di sini...';
+    document.getElementById('b3').placeholder=fl.surat_b3_placeholder||'Tulis di sini...';
+    document.getElementById('lbl-sticky').textContent=fl.sticky_title||'Nota Kecil';
+    document.getElementById('bng').value=fl.sticky_default||'';
+  }
+}
+function goBack(){window.location.href=`templates.html?kat=${curKat?.id||'anniversary'}`}
+function su(s){for(let i=1;i<=5;i++){document.getElementById(`s${i}`).classList.toggle('on',i===s);const el=document.getElementById(`stp${i}`);el.className='step'+(i<s?' done':i===s?' cur':'');}window.scrollTo({top:0,behavior:'smooth'})}
+function nx(s){if(s===1&&(!document.getElementById('n1').value.trim()||!document.getElementById('n2').value.trim())){alert('Sila isi nama kamu dan nama penerima 🌸');return}su(s+1)}
+function bk(s){su(s-1)}
+function tu(){document.getElementById('fph').click()}
+function rpg(){
+  const g=document.getElementById('pgrid');g.innerHTML='';
+  pf.forEach((f,i)=>{const d=document.createElement('div');d.className='pi';const img=document.createElement('img');img.src=URL.createObjectURL(f);const rm=document.createElement('button');rm.className='pirm';rm.textContent='×';rm.onclick=e=>{e.stopPropagation();pf.splice(i,1);rpg()};d.appendChild(img);d.appendChild(rm);g.appendChild(d)});
+  if(pf.length<6){const a=document.createElement('div');a.className='pi piadd';a.textContent='+';a.onclick=tu;g.appendChild(a)}
+}
+function hp(e){Array.from(e.target.files).forEach(f=>{if(pf.length<6)pf.push(f)});rpg();e.target.value=''}
+rpg();
+function tuVideo(){document.getElementById('fvid').click()}
+function hv(e){const f=e.target.files[0];if(!f)return;if(f.size>50*1024*1024){alert('Video terlalu besar! Maks 50MB');return}videoFile=f;document.getElementById('vid-name').textContent=f.name;document.getElementById('video-preview').style.display='flex'}
+function clearVideo(){videoFile=null;document.getElementById('video-preview').style.display='none';document.getElementById('fvid').value=''}
+function switchVTab(tab){document.getElementById('vtab-upload').classList.toggle('on',tab==='upload');document.getElementById('vtab-link').classList.toggle('on',tab==='link');document.getElementById('video-upload-area').style.display=tab==='upload'?'block':'none';document.getElementById('video-link-area').style.display=tab==='link'?'block':'none'}
+function extractYT(){
+  const raw=document.getElementById('yt-input').value.trim();
+  const ok=document.getElementById('yt-ok'),err=document.getElementById('yt-err');
+  ok.className='yt-status';err.className='yt-status';
+  if(!raw)return;
+  let id='';
+  const patterns=[/youtu\.be\/([a-zA-Z0-9_-]{11})/,/[?&]v=([a-zA-Z0-9_-]{11})/,/shorts\/([a-zA-Z0-9_-]{11})/,/embed\/([a-zA-Z0-9_-]{11})/];
+  for(const p of patterns){const m=raw.match(p);if(m){id=m[1];break}}
+  if(!id&&/^[a-zA-Z0-9_-]{11}$/.test(raw))id=raw;
+  if(id){document.getElementById('lid').value=id;document.getElementById('yt-id-display').textContent=id;ok.className='yt-status ok'}
+  else if(raw.length>5)err.className='yt-status err';
+}
+function pc(el){document.querySelectorAll('.cdot').forEach(c=>c.classList.remove('on'));el.classList.add('on');el.style.setProperty('--sc',el.dataset.pk);D={pk:el.dataset.pk,p2:el.dataset.p2,pb:el.dataset.pb,bk:el.dataset.bk}}
+function compressImg(file,maxW,quality){return new Promise(resolve=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{let w=img.width,h=img.height;if(w>maxW){h=Math.round(h*maxW/w);w=maxW}const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);URL.revokeObjectURL(url);resolve(canvas.toDataURL('image/jpeg',quality))};img.src=url})}
+async function generate(){
+  const btn=document.getElementById('bgen'),txt=document.getElementById('bgen-txt'),spin=document.getElementById('bgen-spin');
+  btn.disabled=true;txt.style.display='none';spin.style.display='block';
+  try{
+    // Safety check
+    if(!curTmpl) curTmpl = TEMPLATES[0];
+    if(!curKat) curKat = {id:'anniversary',nama:'Anniversary'};
+    
+    const photos=[];
+    for(const f of pf){const b64=await compressImg(f,800,0.65);photos.push(b64)}
+    let videoData='';
+    if(videoFile){videoData=await new Promise(r=>{const fr=new FileReader();fr.onload=e=>r(e.target.result);fr.readAsDataURL(videoFile)})}
+    const giftData={
+      nama1:document.getElementById('n1').value.trim(),
+      nama2:document.getElementById('n2').value.trim(),
+      tarikh:document.getElementById('tr').value.trim(),
+      tahun:document.getElementById('th').value.trim(),
+      b1:document.getElementById('b1').value.trim(),
+      b2:document.getElementById('b2').value.trim(),
+      b3:document.getElementById('b3').value.trim(),
+      bunga:document.getElementById('bng').value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,6),
+      labels:document.getElementById('lbs').value.split(',').map(s=>s.trim()),
+      lagu_id:document.getElementById('lid').value.trim(),
+      lagu_nama:document.getElementById('lnm').value.trim(),
+      lagu_artis:document.getElementById('lat').value.trim(),
+      photos:photos,
+      video_data:videoData,
+      video_url:document.getElementById('video-link')?.value.trim()||'',
+      template:curTmpl.id,
+      kategori:curKat?.id||'anniversary',
+      pk:D.pk,p2:D.p2,pb:D.pb,bk:D.bk,
+      created_at:new Date().toISOString()
+    };
+    const res=await fetch(`${SB_URL}/rest/v1/gifts`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Prefer':'return=representation'},body:JSON.stringify(giftData)});
+    if(!res.ok)throw new Error(await res.text());
+    const data=await res.json();
+    generatedId=data[0].id;
+    // Detect gift page — pixel templates use gift-pixel.html
+    const giftPage=curTmpl.gift_page||'gift.html';
+    const base=window.location.pathname.replace('form.html','');
+    const giftUrl=`${window.location.origin}${base}${giftPage}?id=${generatedId}&t=${curTmpl.id}`;
+    document.getElementById('modal-link').textContent=giftUrl;
+    document.getElementById('modal').classList.add('on');
+  }catch(err){alert('❌ Ralat: '+err.message)}
+  finally{btn.disabled=false;txt.style.display='block';spin.style.display='none'}
+}
+function copyLink(){navigator.clipboard.writeText(document.getElementById('modal-link').textContent).then(()=>{const b=document.querySelector('.link-copy');b.textContent='✅ Copied!';setTimeout(()=>b.textContent='📋 Copy',2000)})}
+function openGift(){window.open(document.getElementById('modal-link').textContent,'_blank')}
+function resetForm(){document.getElementById('modal').classList.remove('on');su(1);pf.length=0;rpg();videoFile=null}
+init();
+</script>
+</body>
+</html>
