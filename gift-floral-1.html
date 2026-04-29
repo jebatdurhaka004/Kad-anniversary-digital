@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>A Bouquet for You 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400;1,500&family=Playfair+Display:ital,wght@0,400;1,400;1,500&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100svh;overflow-x:hidden}
+body{background:#faf8f5;font-family:'Lato',sans-serif;cursor:none}
+#cur{position:fixed;width:8px;height:8px;background:rgba(160,100,80,.6);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s}
+
+/* PAGES */
+.pg{display:none;position:fixed;inset:0;overflow:hidden}
+.pg.on{display:block}
+
+/* ═══════════════════════════════
+   PAGE 0 — ENVELOPE
+   Pure white, centered envelope
+   with watercolour flower illustration
+═══════════════════════════════ */
+#pg0{background:#faf8f5;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2rem}
+#pg0.on{display:flex}
+
+.env-container{
+  animation:envFloat 3s ease-in-out infinite;
+  cursor:pointer;
+  filter:drop-shadow(0 8px 24px rgba(120,80,60,.12));
+  transition:filter .3s;
+}
+.env-container:hover{filter:drop-shadow(0 12px 32px rgba(120,80,60,.2))}
+.env-container:active{transform:scale(.96);transition:transform .1s}
+@keyframes envFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.tap-open{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(.82rem,3vw,1rem);
+  color:rgba(140,100,80,.4);
+  letter-spacing:.2em;
+  animation:tapBlink 2.5s ease-in-out infinite;
+}
+@keyframes tapBlink{0%,100%{opacity:.4}50%{opacity:.75}}
+
+/* ═══════════════════════════════
+   PAGE 1 — HEART BOUQUET
+   White background, photorealistic
+   flower heart, falling petals
+═══════════════════════════════ */
+#pg1{background:#ffffff;cursor:pointer}
+#pg1.on{display:flex;align-items:center;justify-content:center;flex-direction:column}
+
+.heart-wrap{
+  position:relative;
+  animation:heartIn 1.2s cubic-bezier(.22,1,.36,1) forwards;
+  opacity:0;
+}
+@keyframes heartIn{
+  0%{opacity:0;transform:scale(.5) rotate(-5deg)}
+  60%{opacity:1;transform:scale(1.05) rotate(1deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+
+/* Falling petal animation */
+.petal{
+  position:fixed;
+  top:-60px;
+  font-size:var(--s,18px);
+  animation:petalFall var(--d,6s) ease-in infinite;
+  animation-delay:var(--dl,0s);
+  pointer-events:none;
+  opacity:0;
+  z-index:10;
+}
+@keyframes petalFall{
+  0%{opacity:0;transform:translateY(0) rotate(0deg) translateX(0)}
+  5%{opacity:.8}
+  95%{opacity:.3}
+  100%{opacity:0;transform:translateY(110vh) rotate(720deg) translateX(var(--sx,20px))}
+}
+
+.p1-hint{
+  position:fixed;bottom:8%;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(.8rem,3vw,1rem);
+  color:rgba(120,80,70,.4);letter-spacing:.18em;
+  animation:tapBlink 2.5s ease-in-out infinite;
+  white-space:nowrap;z-index:5;
+}
+
+/* ═══════════════════════════════
+   PAGE 2 — FULL BLOOM
+   Screen filled with flowers,
+   zoom animation
+═══════════════════════════════ */
+#pg2{background:#fff;cursor:pointer}
+#pg2.on{display:flex;align-items:center;justify-content:center}
+
+.bloom-scene{
+  position:absolute;inset:0;overflow:hidden;
+}
+.bloom-img{
+  position:absolute;inset:-5%;
+  animation:bloomZoom 8s ease-in-out infinite;
+}
+@keyframes bloomZoom{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+.bloom-tap{
+  position:absolute;bottom:7%;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(.82rem,3vw,1rem);
+  color:rgba(255,255,255,.8);letter-spacing:.22em;
+  text-shadow:0 1px 6px rgba(0,0,0,.3);
+  animation:tapBlink 2.5s ease-in-out infinite;
+  white-space:nowrap;z-index:5;
+}
+
+/* ═══════════════════════════════
+   PAGE 3 — DARK BOTANICAL LETTER
+   Dark charcoal bg, SVG vine art,
+   rotated stamp letter + polaroids
+═══════════════════════════════ */
+#pg3{background:#1a1814;overflow-y:auto}
+#pg3.on{display:block}
+
+.botanic-scene{
+  position:fixed;inset:0;
+  background:#1a1814;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+
+.p3-scroll{
+  position:relative;z-index:1;
+  min-height:100svh;
+  display:flex;align-items:center;justify-content:center;
+  padding:3rem 1.5rem 5rem;
+}
+
+/* The stamp card — slightly rotated like in video */
+.stamp-card{
+  background:#f8f6f2;
+  position:relative;
+  width:100%;max-width:440px;
+  transform:rotate(-1.5deg);
+  box-shadow:
+    0 4px 6px rgba(0,0,0,.15),
+    0 20px 60px rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.05);
+}
+/* Stamp teeth top */
+.stamp-card::before{
+  content:'';position:absolute;
+  top:-10px;left:0;right:0;height:10px;
+  background:radial-gradient(circle at 50% 0%,#1a1814 71%,transparent 71%);
+  background-size:12px 10px;background-repeat:repeat-x;
+}
+/* Stamp teeth bottom */
+.stamp-card::after{
+  content:'';position:absolute;
+  bottom:-10px;left:0;right:0;height:10px;
+  background:radial-gradient(circle at 50% 100%,#1a1814 71%,transparent 71%);
+  background-size:12px 10px;background-repeat:repeat-x;
+}
+.stamp-ls{
+  position:absolute;left:-10px;top:0;bottom:0;width:10px;
+  background:radial-gradient(circle at 100% 50%,#1a1814 71%,transparent 71%);
+  background-size:10px 12px;background-repeat:repeat-y;
+}
+.stamp-rs{
+  position:absolute;right:-10px;top:0;bottom:0;width:10px;
+  background:radial-gradient(circle at 0% 50%,#1a1814 71%,transparent 71%);
+  background-size:10px 12px;background-repeat:repeat-y;
+}
+
+.stamp-inner{
+  padding:1.4rem 1.5rem 1.4rem 7rem;
+  position:relative;
+  min-height:320px;
+}
+
+/* Polaroid strip on left — exactly like video */
+.pol-strip{
+  position:absolute;
+  left:-1.5rem;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:.3rem;
+  z-index:5;
+}
+.pol{
+  background:#fff;
+  padding:.28rem .28rem .18rem;
+  box-shadow:2px 3px 10px rgba(0,0,0,.4);
+  position:relative;
+  width:68px;
+}
+.pol:nth-child(1){transform:rotate(-3deg)}
+.pol:nth-child(2){transform:rotate(2deg);margin-left:.3rem}
+.pol:nth-child(3){transform:rotate(-1.5deg)}
+/* Red dot pin */
+.pol::before{
+  content:'';position:absolute;
+  top:-5px;left:50%;transform:translateX(-50%);
+  width:9px;height:9px;
+  background:radial-gradient(circle at 35% 30%,#ff7070,#cc0808);
+  border-radius:50%;
+  box-shadow:0 2px 4px rgba(0,0,0,.4),inset 0 1px 2px rgba(255,200,200,.4);
+  z-index:3;
+}
+.pol-img{
+  width:100%;aspect-ratio:3/4;
+  background:linear-gradient(135deg,#e0c8d0,#d0b8c0);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+}
+.pol-img img{width:100%;height:100%;object-fit:cover}
+
+/* Letter content */
+.letter-hdr{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:.8rem;padding-bottom:.6rem;
+  border-bottom:1px solid rgba(150,120,90,.15);
+}
+.lh-tf{display:flex;flex-direction:column;gap:.35rem}
+.lh-row{display:flex;flex-direction:column;gap:.05rem}
+.lh-lbl{font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(100,70,50,.35)}
+.lh-name{font-family:'Dancing Script',cursive;font-size:1.1rem;color:#3a1808;line-height:1}
+.lh-right{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem}
+/* Postage stamp box */
+.postage-box{
+  width:38px;height:48px;
+  border:1.5px solid rgba(140,110,80,.2);
+  background:linear-gradient(135deg,#fdf5ec,#f5e8d8);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+  box-shadow:1px 1px 4px rgba(0,0,0,.08);
+}
+/* Paperclip SVG */
+.paperclip{
+  color:rgba(180,150,100,.6);
+  font-size:1rem;
+  transform:rotate(40deg);
+  display:block;
+  margin-right:.1rem;
+}
+
+/* Lined paper */
+.letter-lined{
+  background-image:repeating-linear-gradient(
+    to bottom,transparent,transparent 26px,
+    rgba(150,120,90,.1) 26px,rgba(150,120,90,.1) 27px
+  );
+  padding:.25rem 0;
+}
+.letter-body{
+  font-family:'Dancing Script',cursive;
+  font-size:clamp(.88rem,3vw,1.04rem);
+  line-height:1.96;
+  color:#2a1405;
+}
+.letter-sign{
+  font-family:'Dancing Script',cursive;
+  font-size:clamp(1rem,3.5vw,1.3rem);
+  color:#5a2810;
+  text-align:right;
+  margin-top:.5rem;
+}
+
+/* Bouquet decoration on right side of letter — like in video */
+.letter-bouquet{
+  position:absolute;
+  right:-2.5rem;top:50%;transform:translateY(-60%) rotate(15deg);
+  z-index:6;
+  filter:drop-shadow(2px 4px 8px rgba(0,0,0,.4));
+}
+
+/* Nav */
+.flora-nav{
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  display:flex;gap:.8rem;z-index:10;
+}
+.fnav-btn{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:.85rem;color:rgba(255,255,255,.3);
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  padding:.45rem 1.2rem;border-radius:50px;cursor:pointer;
+  transition:all .3s;letter-spacing:.1em;backdrop-filter:blur(8px);
+}
+.fnav-btn:hover{color:rgba(255,255,255,.65);border-color:rgba(255,255,255,.25)}
+.fnav-btn.primary{
+  color:rgba(255,200,150,.7);
+  border-color:rgba(255,200,150,.25);
+}
+
+/* ═══════════════════════════════
+   PAGE 4 — VIDEO
+═══════════════════════════════ */
+#pg4{background:#1a1814;overflow-y:auto}
+#pg4.on{display:flex;align-items:center;justify-content:center;flex-direction:column}
+
+.p4-inner{
+  position:relative;z-index:1;
+  width:100%;max-width:480px;
+  padding:3rem 1.5rem 5rem;
+  display:flex;flex-direction:column;align-items:center;gap:1.5rem;
+}
+.p4-title{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(1.1rem,4.5vw,1.6rem);
+  color:rgba(255,220,180,.75);text-align:center;
+}
+.p4-sub{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:.85rem;color:rgba(255,255,255,.25);
+  text-align:center;margin-top:-.8rem;
+}
+.vid-frame{
+  width:100%;border-radius:4px;overflow:hidden;
+  box-shadow:0 10px 40px rgba(0,0,0,.7);
+}
+.vid-frame iframe,.vid-frame video{width:100%;aspect-ratio:16/9;border:none;display:block}
+.p4-divider{
+  display:flex;align-items:center;gap:.7rem;width:100%;
+}
+.p4-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(255,200,150,.15),transparent)}
+.p4-rose{font-size:.9rem;opacity:.3}
+
+/* ═══════════════════════════════
+   LOADING
+═══════════════════════════════ */
+#loading{
+  position:fixed;inset:0;background:#faf8f5;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1.2rem;transition:opacity 1.2s;
+}
+.ld-env{
+  animation:envFloat 2s ease-in-out infinite;
+}
+.ld-title{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1rem;color:rgba(140,90,70,.5);letter-spacing:.25em;
+}
+.ld-bar{
+  width:100px;height:1px;
+  background:rgba(180,130,100,.12);
+  position:relative;overflow:hidden;
+}
+.ld-bar::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(180,130,100,.3),rgba(200,150,120,.5));
+  animation:ldFill 1.8s ease forwards;
+  transform-origin:left;
+}
+@keyframes ldFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+#err{
+  position:fixed;inset:0;background:#faf8f5;z-index:9999;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:1rem;text-align:center;padding:2rem;
+}
+
+/* MUSIC BAR */
+#mbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:8800;
+  background:rgba(22,18,14,.93);backdrop-filter:blur(12px);
+  border-top:1px solid rgba(255,200,150,.06);
+  padding:.45rem 1rem;
+  display:none;align-items:center;gap:.6rem;
+}
+#mbar.on{display:flex;animation:mbUp .4s ease}
+@keyframes mbUp{from{transform:translateY(100%)}to{transform:none}}
+.mb-disc{width:22px;height:22px;border-radius:50%;flex-shrink:0;background:repeating-conic-gradient(#1a0a0a 0deg,#2d1a14 4deg,#1a0a0a 8deg);position:relative}
+.mb-disc::before{content:'';position:absolute;inset:30%;border-radius:50%;background:#a06040}
+.mb-disc::after{content:'';position:absolute;inset:44%;border-radius:50%;background:rgba(255,255,255,.7)}
+.mb-disc.sp{animation:discSpin 2.5s linear infinite}
+@keyframes discSpin{to{transform:rotate(360deg)}}
+.mb-info{flex:1;min-width:0}
+.mb-t{font-size:.66rem;color:rgba(255,220,180,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-a{font-size:.54rem;color:rgba(255,255,255,.3)}
+.mb-bar{flex:1;height:2px;background:rgba(255,255,255,.08);cursor:pointer;border-radius:1px;min-width:50px}
+.mb-fill{height:100%;background:rgba(180,120,80,.45);border-radius:1px;width:0%}
+.mb-btns{display:flex;gap:.35rem}
+.mb-btn{background:rgba(255,255,255,.05);border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;color:rgba(255,255,255,.55);font-size:.7rem;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="ld-env">
+    <svg width="80" height="60" viewBox="0 0 80 60" fill="none">
+      <rect x="2" y="2" width="76" height="56" rx="3" fill="#f0e8dc" stroke="rgba(180,150,120,.3)" stroke-width="1.5"/>
+      <path d="M2 2 L40 36 L78 2" stroke="rgba(180,150,120,.2)" stroke-width="1.5" fill="none"/>
+      <circle cx="40" cy="30" r="6" fill="rgba(180,100,120,.3)"/>
+      <text x="40" y="34" text-anchor="middle" font-size="8">🌸</text>
+    </svg>
+  </div>
+  <p class="ld-title">A Bouquet for You</p>
+  <div class="ld-bar"></div>
+</div>
+
+<!-- ERROR -->
+<div id="err">
+  <svg width="50" height="50" viewBox="0 0 50 50"><text y="40" font-size="40">🥀</text></svg>
+  <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:#8b5050">Hadiah tidak dijumpai</p>
+  <p style="font-size:.75rem;color:rgba(100,60,50,.4);margin-top:.2rem">Link mungkin sudah tamat tempoh</p>
+</div>
+
+<!-- MUSIC BAR -->
+<div id="mbar">
+  <div class="mb-disc" id="mb-disc"></div>
+  <div class="mb-info"><p class="mb-t" id="mb-t">♪</p><p class="mb-a" id="mb-a"></p></div>
+  <div class="mb-bar" id="mb-bar" onclick="ska(event)"><div class="mb-fill" id="mb-fill"></div></div>
+  <div class="mb-btns">
+    <button class="mb-btn" id="mb-play" onclick="tgp()">⏸</button>
+    <button class="mb-btn" onclick="tgm()">🔊</button>
+  </div>
+</div>
+
+<!-- ═══ PAGE 0: ENVELOPE ═══ -->
+<div class="pg on" id="pg0">
+  <div class="env-container" onclick="openEnv()" id="env-el">
+    <!-- Watercolour illustrated envelope SVG -->
+    <svg width="220" height="160" viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Envelope body -->
+      <rect x="4" y="4" width="212" height="152" rx="4" fill="url(#envGrad)" stroke="rgba(180,150,120,.2)" stroke-width="1.5"/>
+      <!-- Envelope flap top -->
+      <path d="M4 4 L110 90 L216 4 Z" fill="url(#flapGrad)" stroke="rgba(180,150,120,.15)" stroke-width="1"/>
+      <!-- Envelope sides -->
+      <path d="M4 4 L4 156 L90 80 Z" fill="rgba(200,170,140,.25)"/>
+      <path d="M216 4 L216 156 L130 80 Z" fill="rgba(190,160,130,.2)"/>
+      <!-- Envelope bottom fold -->
+      <path d="M4 156 L110 72 L216 156 Z" fill="url(#bottomGrad)"/>
+
+      <!-- Wax seal -->
+      <circle cx="110" cy="100" r="14" fill="url(#sealGrad)"/>
+      <circle cx="110" cy="100" r="11" fill="none" stroke="rgba(255,255,255,.4)" stroke-width=".8"/>
+      <text x="110" y="105" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.9)">🌸</text>
+
+      <!-- Watercolour flower illustration on envelope -->
+      <g transform="translate(72,18)">
+        <!-- Stem -->
+        <path d="M38 70 Q36 55 34 42 Q32 30 30 18" stroke="#8a7a50" stroke-width="1.2" fill="none"/>
+        <path d="M34 42 Q28 38 22 36" stroke="#8a7a50" stroke-width="1" fill="none"/>
+        <path d="M38 55 Q44 50 48 46" stroke="#8a7a50" stroke-width="1" fill="none"/>
+
+        <!-- Leaves -->
+        <ellipse cx="20" cy="36" rx="8" ry="4" fill="#7a9860" transform="rotate(-20,20,36)" opacity=".7"/>
+        <ellipse cx="50" cy="45" rx="7" ry="3.5" fill="#8aaa70" transform="rotate(15,50,45)" opacity=".65"/>
+        <ellipse cx="34" cy="22" rx="6" ry="3" fill="#7a9860" transform="rotate(-10,34,22)" opacity=".6"/>
+
+        <!-- Main flower - watercolour rose -->
+        <circle cx="30" cy="16" r="12" fill="rgba(220,160,180,.15)"/>
+        <!-- Petals -->
+        <ellipse cx="30" cy="6" rx="5" ry="8" fill="rgba(200,130,150,.55)" transform="rotate(0,30,16)"/>
+        <ellipse cx="30" cy="6" rx="5" ry="8" fill="rgba(210,140,160,.5)" transform="rotate(45,30,16)"/>
+        <ellipse cx="30" cy="6" rx="5" ry="8" fill="rgba(195,125,145,.5)" transform="rotate(90,30,16)"/>
+        <ellipse cx="30" cy="6" rx="5" ry="8" fill="rgba(205,135,155,.45)" transform="rotate(135,30,16)"/>
+        <ellipse cx="30" cy="6" rx="5" ry="8" fill="rgba(200,130,150,.5)" transform="rotate(180,30,16)"/>
+        <ellipse cx="30" cy="6" rx="5" ry="8" fill="rgba(210,140,160,.45)" transform="rotate(225,30,16)"/>
+        <ellipse cx="30" cy="6" rx="5" ry="8" fill="rgba(195,125,145,.5)" transform="rotate(270,30,16)"/>
+        <ellipse cx="30" cy="6" rx="5" ry="8" fill="rgba(205,135,155,.45)" transform="rotate(315,30,16)"/>
+        <circle cx="30" cy="16" r="5" fill="rgba(180,100,120,.6)"/>
+        <circle cx="30" cy="16" r="3" fill="rgba(160,80,100,.5)"/>
+
+        <!-- Small flower top right -->
+        <g transform="translate(52,8)">
+          <circle cx="0" cy="0" r="7" fill="rgba(180,140,200,.15)"/>
+          <ellipse cx="0" cy="-5" rx="3" ry="5" fill="rgba(160,120,190,.5)"/>
+          <ellipse cx="0" cy="-5" rx="3" ry="5" fill="rgba(170,130,200,.45)" transform="rotate(60,0,0)"/>
+          <ellipse cx="0" cy="-5" rx="3" ry="5" fill="rgba(160,120,190,.45)" transform="rotate(120,0,0)"/>
+          <ellipse cx="0" cy="-5" rx="3" ry="5" fill="rgba(170,130,200,.4)" transform="rotate(180,0,0)"/>
+          <ellipse cx="0" cy="-5" rx="3" ry="5" fill="rgba(160,120,190,.4)" transform="rotate(240,0,0)"/>
+          <ellipse cx="0" cy="-5" rx="3" ry="5" fill="rgba(170,130,200,.4)" transform="rotate(300,0,0)"/>
+          <circle cx="0" cy="0" r="3" fill="rgba(220,200,100,.7)"/>
+        </g>
+
+        <!-- Tiny berries -->
+        <circle cx="44" cy="28" r="2.5" fill="rgba(140,100,160,.6)"/>
+        <circle cx="48" cy="32" r="2" fill="rgba(140,100,160,.5)"/>
+        <circle cx="42" cy="34" r="2" fill="rgba(140,100,160,.55)"/>
+      </g>
+
+      <defs>
+        <linearGradient id="envGrad" x1="0" y1="0" x2="220" y2="160">
+          <stop offset="0%" stop-color="#f7f0e6"/>
+          <stop offset="100%" stop-color="#ede3d4"/>
+        </linearGradient>
+        <linearGradient id="flapGrad" x1="0" y1="0" x2="220" y2="90">
+          <stop offset="0%" stop-color="#f2e8da"/>
+          <stop offset="100%" stop-color="#e8ddd0"/>
+        </linearGradient>
+        <linearGradient id="bottomGrad" x1="0" y1="156" x2="220" y2="72">
+          <stop offset="0%" stop-color="#ece0d0"/>
+          <stop offset="100%" stop-color="#f5ecdf"/>
+        </linearGradient>
+        <radialGradient id="sealGrad" cx="40%" cy="35%">
+          <stop offset="0%" stop-color="#c090a0"/>
+          <stop offset="100%" stop-color="#906070"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+  <p class="tap-open">Tap to open</p>
+</div>
+
+<!-- ═══ PAGE 1: HEART BOUQUET ═══ -->
+<div class="pg" id="pg1">
+  <!-- Falling petals -->
+  <div class="petal" style="left:6%;--s:16px;--d:5.5s;--dl:0s;--sx:15px">🌸</div>
+  <div class="petal" style="left:18%;--s:20px;--d:7s;--dl:.8s;--sx:-10px">🌺</div>
+  <div class="petal" style="left:32%;--s:14px;--d:5s;--dl:1.5s;--sx:20px">🌷</div>
+  <div class="petal" style="left:48%;--s:18px;--d:6.5s;--dl:.3s;--sx:-15px">🌸</div>
+  <div class="petal" style="left:62%;--s:16px;--d:5.5s;--dl:2s;--sx:10px">🌼</div>
+  <div class="petal" style="left:76%;--s:20px;--d:7s;--dl:1s;--sx:-20px">🌺</div>
+  <div class="petal" style="left:88%;--s:14px;--d:6s;--dl:.5s;--sx:15px">🌷</div>
+  <div class="petal" style="left:25%;--s:12px;--d:8s;--dl:2.5s;--sx:-8px">🌸</div>
+  <div class="petal" style="left:72%;--s:15px;--d:6.5s;--dl:1.8s;--sx:12px">🌼</div>
+
+  <div class="heart-wrap" onclick="goPage('pg2')">
+    <!-- Heart bouquet SVG — photorealistic layered flowers -->
+    <svg width="min(80vw,80vh)" height="min(80vw,80vh)" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" style="max-width:400px;max-height:400px">
+      <defs>
+        <!-- Clip path for heart shape -->
+        <clipPath id="heartClip">
+          <path d="M200 340 C200 340 40 260 40 150 C40 100 75 65 120 65 C150 65 175 80 200 105 C225 80 250 65 280 65 C325 65 360 100 360 150 C360 260 200 340 200 340 Z"/>
+        </clipPath>
+        <!-- Flower gradients -->
+        <radialGradient id="rose1" cx="40%" cy="35%"><stop offset="0%" stop-color="#f8c8d0"/><stop offset="50%" stop-color="#e89098"/><stop offset="100%" stop-color="#c86070"/></radialGradient>
+        <radialGradient id="rose2" cx="40%" cy="35%"><stop offset="0%" stop-color="#ffd8b0"/><stop offset="50%" stop-color="#e8a870"/><stop offset="100%" stop-color="#c07840"/></radialGradient>
+        <radialGradient id="daisy1" cx="50%" cy="50%"><stop offset="0%" stop-color="#fff8e0"/><stop offset="100%" stop-color="#ffe080"/></radialGradient>
+        <radialGradient id="hydrangea" cx="50%" cy="50%"><stop offset="0%" stop-color="#c8d8f8"/><stop offset="100%" stop-color="#8898d8"/></radialGradient>
+        <radialGradient id="peony" cx="40%" cy="35%"><stop offset="0%" stop-color="#fce0e8"/><stop offset="50%" stop-color="#f0a8b8"/><stop offset="100%" stop-color="#d07888"/></radialGradient>
+        <filter id="softBlur"><feGaussianBlur stdDeviation="0.5"/></filter>
+      </defs>
+
+      <!-- Background fill for heart -->
+      <g clip-path="url(#heartClip)">
+        <!-- Base gradient fill -->
+        <rect width="400" height="400" fill="url(#bgFloral)"/>
+
+        <!-- Large pink rose - top left -->
+        <g transform="translate(95,100)" filter="url(#softBlur)">
+          <circle r="42" fill="rgba(240,180,190,.2)"/>
+          <g><!-- outer petals --><ellipse ry="36" rx="16" fill="rgba(230,160,170,.65)"/><ellipse ry="36" rx="16" fill="rgba(235,165,175,.6)" transform="rotate(40)"/><ellipse ry="36" rx="16" fill="rgba(228,158,168,.6)" transform="rotate(80)"/><ellipse ry="36" rx="16" fill="rgba(232,162,172,.55)" transform="rotate(120)"/><ellipse ry="36" rx="16" fill="rgba(230,160,170,.6)" transform="rotate(160)"/><ellipse ry="36" rx="16" fill="rgba(235,165,175,.55)" transform="rotate(200)"/><ellipse ry="36" rx="16" fill="rgba(228,158,168,.6)" transform="rotate(240)"/><ellipse ry="36" rx="16" fill="rgba(232,162,172,.55)" transform="rotate(280)"/><ellipse ry="36" rx="16" fill="rgba(230,160,170,.6)" transform="rotate(320)"/></g>
+          <g transform="scale(.7)"><!-- mid petals --><ellipse ry="30" rx="13" fill="rgba(210,130,145,.7)"/><ellipse ry="30" rx="13" fill="rgba(215,135,150,.65)" transform="rotate(45)"/><ellipse ry="30" rx="13" fill="rgba(208,128,143,.65)" transform="rotate(90)"/><ellipse ry="30" rx="13" fill="rgba(212,132,147,.6)" transform="rotate(135)"/><ellipse ry="30" rx="13" fill="rgba(210,130,145,.65)" transform="rotate(180)"/><ellipse ry="30" rx="13" fill="rgba(215,135,150,.6)" transform="rotate(225)"/><ellipse ry="30" rx="13" fill="rgba(208,128,143,.65)" transform="rotate(270)"/><ellipse ry="30" rx="13" fill="rgba(212,132,147,.6)" transform="rotate(315)"/></g>
+          <circle r="14" fill="rgba(185,90,105,.75)"/>
+          <circle r="8" fill="rgba(160,65,80,.8)"/>
+          <circle r="4" fill="rgba(140,45,60,.7)"/>
+        </g>
+
+        <!-- Sunflower - top right area -->
+        <g transform="translate(285,120)">
+          <g><!-- petals --><ellipse ry="32" rx="12" fill="#f5c842" opacity=".9"/><ellipse ry="32" rx="12" fill="#f0c038" opacity=".85" transform="rotate(30)"/><ellipse ry="32" rx="12" fill="#f5c842" opacity=".85" transform="rotate(60)"/><ellipse ry="32" rx="12" fill="#f0c038" opacity=".8" transform="rotate(90)"/><ellipse ry="32" rx="12" fill="#f5c842" opacity=".85" transform="rotate(120)"/><ellipse ry="32" rx="12" fill="#f0c038" opacity=".8" transform="rotate(150)"/><ellipse ry="32" rx="12" fill="#f5c842" opacity=".85" transform="rotate(180)"/><ellipse ry="32" rx="12" fill="#f0c038" opacity=".8" transform="rotate(210)"/><ellipse ry="32" rx="12" fill="#f5c842" opacity=".85" transform="rotate(240)"/><ellipse ry="32" rx="12" fill="#f0c038" opacity=".8" transform="rotate(270)"/><ellipse ry="32" rx="12" fill="#f5c842" opacity=".85" transform="rotate(300)"/><ellipse ry="32" rx="12" fill="#f0c038" opacity=".8" transform="rotate(330)"/></g>
+          <circle r="20" fill="#4a2808"/>
+          <circle r="16" fill="#3a1a04"/>
+          <!-- Seeds pattern -->
+          <circle cx="0" cy="-8" r="2" fill="rgba(80,40,10,.5)"/>
+          <circle cx="7" cy="-4" r="2" fill="rgba(80,40,10,.5)"/>
+          <circle cx="7" cy="4" r="2" fill="rgba(80,40,10,.5)"/>
+          <circle cx="0" cy="8" r="2" fill="rgba(80,40,10,.5)"/>
+          <circle cx="-7" cy="4" r="2" fill="rgba(80,40,10,.5)"/>
+          <circle cx="-7" cy="-4" r="2" fill="rgba(80,40,10,.5)"/>
+        </g>
+
+        <!-- Peony - center -->
+        <g transform="translate(200,175)" filter="url(#softBlur)">
+          <circle r="50" fill="rgba(250,210,220,.2)"/>
+          <g><!-- large outer --><ellipse ry="44" rx="18" fill="rgba(245,185,200,.6)"/><ellipse ry="44" rx="18" fill="rgba(248,190,205,.55)" transform="rotate(36)"/><ellipse ry="44" rx="18" fill="rgba(243,183,198,.55)" transform="rotate(72)"/><ellipse ry="44" rx="18" fill="rgba(246,187,202,.5)" transform="rotate(108)"/><ellipse ry="44" rx="18" fill="rgba(245,185,200,.55)" transform="rotate(144)"/><ellipse ry="44" rx="18" fill="rgba(248,190,205,.5)" transform="rotate(180)"/><ellipse ry="44" rx="18" fill="rgba(243,183,198,.55)" transform="rotate(216)"/><ellipse ry="44" rx="18" fill="rgba(246,187,202,.5)" transform="rotate(252)"/><ellipse ry="44" rx="18" fill="rgba(245,185,200,.55)" transform="rotate(288)"/><ellipse ry="44" rx="18" fill="rgba(248,190,205,.5)" transform="rotate(324)"/></g>
+          <g transform="scale(.75)"><ellipse ry="38" rx="16" fill="rgba(225,155,175,.7)"/><ellipse ry="38" rx="16" fill="rgba(228,158,178,.65)" transform="rotate(45)"/><ellipse ry="38" rx="16" fill="rgba(222,152,172,.65)" transform="rotate(90)"/><ellipse ry="38" rx="16" fill="rgba(226,156,176,.6)" transform="rotate(135)"/><ellipse ry="38" rx="16" fill="rgba(225,155,175,.65)" transform="rotate(180)"/><ellipse ry="38" rx="16" fill="rgba(228,158,178,.6)" transform="rotate(225)"/><ellipse ry="38" rx="16" fill="rgba(222,152,172,.65)" transform="rotate(270)"/><ellipse ry="38" rx="16" fill="rgba(226,156,176,.6)" transform="rotate(315)"/></g>
+          <circle r="16" fill="rgba(195,105,130,.7)"/>
+          <circle r="10" fill="rgba(175,85,110,.75)"/>
+          <circle r="5" fill="rgba(155,65,90,.7)"/>
+        </g>
+
+        <!-- Daisy - left middle -->
+        <g transform="translate(88,205)">
+          <g><!-- petals --><ellipse ry="22" rx="7" fill="white" opacity=".95"/><ellipse ry="22" rx="7" fill="white" opacity=".9" transform="rotate(30)"/><ellipse ry="22" rx="7" fill="white" opacity=".92" transform="rotate(60)"/><ellipse ry="22" rx="7" fill="white" opacity=".88" transform="rotate(90)"/><ellipse ry="22" rx="7" fill="white" opacity=".92" transform="rotate(120)"/><ellipse ry="22" rx="7" fill="white" opacity=".88" transform="rotate(150)"/><ellipse ry="22" rx="7" fill="white" opacity=".92" transform="rotate(180)"/><ellipse ry="22" rx="7" fill="white" opacity=".88" transform="rotate(210)"/><ellipse ry="22" rx="7" fill="white" opacity=".92" transform="rotate(240)"/><ellipse ry="22" rx="7" fill="white" opacity=".88" transform="rotate(270)"/><ellipse ry="22" rx="7" fill="white" opacity=".92" transform="rotate(300)"/><ellipse ry="22" rx="7" fill="white" opacity=".88" transform="rotate(330)"/></g>
+          <circle r="11" fill="url(#daisy1)"/>
+          <circle r="7" fill="#f5b020"/>
+          <circle r="4" fill="#e09010"/>
+        </g>
+
+        <!-- Hydrangea cluster - right middle -->
+        <g transform="translate(310,210)">
+          <!-- Multiple small flowers -->
+          <g transform="translate(-10,-10)"><circle r="10" fill="url(#hydrangea)" opacity=".8"/><circle cx="4" cy="-3" r="4" fill="rgba(150,170,230,.6)"/><circle cx="-4" cy="-3" r="4" fill="rgba(145,165,225,.55)"/><circle cx="0" cy="5" r="4" fill="rgba(155,175,235,.6)"/></g>
+          <g transform="translate(12,-5)"><circle r="9" fill="url(#hydrangea)" opacity=".75"/><circle cx="3" cy="-3" r="3.5" fill="rgba(150,170,230,.55)"/><circle cx="-3" cy="-3" r="3.5" fill="rgba(145,165,225,.5)"/><circle cx="0" cy="4" r="3.5" fill="rgba(155,175,235,.55)"/></g>
+          <g transform="translate(0,14)"><circle r="10" fill="url(#hydrangea)" opacity=".8"/><circle cx="4" cy="-3" r="4" fill="rgba(150,170,230,.6)"/><circle cx="-4" cy="-3" r="4" fill="rgba(145,165,225,.55)"/><circle cx="0" cy="5" r="4" fill="rgba(155,175,235,.6)"/></g>
+          <g transform="translate(-14,8)"><circle r="8" fill="url(#hydrangea)" opacity=".7"/><circle cx="3" cy="-2.5" r="3" fill="rgba(150,170,230,.5)"/><circle cx="-3" cy="-2.5" r="3" fill="rgba(145,165,225,.45)"/><circle cx="0" cy="3.5" r="3" fill="rgba(155,175,235,.5)"/></g>
+        </g>
+
+        <!-- Orange/coral rose - bottom left -->
+        <g transform="translate(130,280)" filter="url(#softBlur)">
+          <g><ellipse ry="30" rx="13" fill="rgba(235,155,100,.65)"/><ellipse ry="30" rx="13" fill="rgba(240,160,105,.6)" transform="rotate(45)"/><ellipse ry="30" rx="13" fill="rgba(233,153,98,.6)" transform="rotate(90)"/><ellipse ry="30" rx="13" fill="rgba(237,157,102,.55)" transform="rotate(135)"/><ellipse ry="30" rx="13" fill="rgba(235,155,100,.6)" transform="rotate(180)"/><ellipse ry="30" rx="13" fill="rgba(240,160,105,.55)" transform="rotate(225)"/><ellipse ry="30" rx="13" fill="rgba(233,153,98,.6)" transform="rotate(270)"/><ellipse ry="30" rx="13" fill="rgba(237,157,102,.55)" transform="rotate(315)"/></g>
+          <g transform="scale(.65)"><ellipse ry="26" rx="11" fill="rgba(215,125,70,.7)"/><ellipse ry="26" rx="11" fill="rgba(218,128,73,.65)" transform="rotate(60)"/><ellipse ry="26" rx="11" fill="rgba(213,123,68,.65)" transform="rotate(120)"/><ellipse ry="26" rx="11" fill="rgba(216,126,71,.6)" transform="rotate(180)"/><ellipse ry="26" rx="11" fill="rgba(215,125,70,.65)" transform="rotate(240)"/><ellipse ry="26" rx="11" fill="rgba(218,128,73,.6)" transform="rotate(300)"/></g>
+          <circle r="10" fill="rgba(180,85,40,.7)"/>
+          <circle r="6" fill="rgba(155,65,25,.75)"/>
+        </g>
+
+        <!-- White daisy - bottom center -->
+        <g transform="translate(215,295)">
+          <g><ellipse ry="18" rx="6" fill="rgba(255,255,255,.95)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.9)" transform="rotate(30)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.92)" transform="rotate(60)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.88)" transform="rotate(90)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.92)" transform="rotate(120)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.88)" transform="rotate(150)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.92)" transform="rotate(180)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.88)" transform="rotate(210)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.92)" transform="rotate(240)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.88)" transform="rotate(270)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.92)" transform="rotate(300)"/><ellipse ry="18" rx="6" fill="rgba(255,255,255,.88)" transform="rotate(330)"/></g>
+          <circle r="10" fill="url(#daisy1)"/>
+          <circle r="6" fill="#f0b010"/>
+        </g>
+
+        <!-- Pink dahlia - top center -->
+        <g transform="translate(195,85)">
+          <g><ellipse ry="20" rx="7" fill="rgba(240,160,180,.7)"/><ellipse ry="20" rx="7" fill="rgba(245,165,185,.65)" transform="rotate(24)"/><ellipse ry="20" rx="7" fill="rgba(238,158,178,.65)" transform="rotate(48)"/><ellipse ry="20" rx="7" fill="rgba(242,162,182,.6)" transform="rotate(72)"/><ellipse ry="20" rx="7" fill="rgba(240,160,180,.65)" transform="rotate(96)"/><ellipse ry="20" rx="7" fill="rgba(245,165,185,.6)" transform="rotate(120)"/><ellipse ry="20" rx="7" fill="rgba(238,158,178,.65)" transform="rotate(144)"/><ellipse ry="20" rx="7" fill="rgba(242,162,182,.6)" transform="rotate(168)"/><ellipse ry="20" rx="7" fill="rgba(240,160,180,.65)" transform="rotate(192)"/><ellipse ry="20" rx="7" fill="rgba(245,165,185,.6)" transform="rotate(216)"/><ellipse ry="20" rx="7" fill="rgba(238,158,178,.65)" transform="rotate(240)"/><ellipse ry="20" rx="7" fill="rgba(242,162,182,.6)" transform="rotate(264)"/><ellipse ry="20" rx="7" fill="rgba(240,160,180,.65)" transform="rotate(288)"/><ellipse ry="20" rx="7" fill="rgba(245,165,185,.6)" transform="rotate(312)"/><ellipse ry="20" rx="7" fill="rgba(238,158,178,.65)" transform="rotate(336)"/></g>
+          <circle r="7" fill="rgba(200,100,130,.7)"/>
+        </g>
+
+        <!-- Small purple flowers scattered -->
+        <g transform="translate(160,130)"><circle r="8" fill="rgba(180,130,210,.6)"/><ellipse ry="7" rx="3" fill="rgba(170,120,200,.6)"/><ellipse ry="7" rx="3" fill="rgba(175,125,205,.55)" transform="rotate(60)"/><ellipse ry="7" rx="3" fill="rgba(170,120,200,.55)" transform="rotate(120)"/><ellipse ry="7" rx="3" fill="rgba(175,125,205,.5)" transform="rotate(180)"/><ellipse ry="7" rx="3" fill="rgba(170,120,200,.55)" transform="rotate(240)"/><ellipse ry="7" rx="3" fill="rgba(175,125,205,.5)" transform="rotate(300)"/><circle r="4" fill="rgba(220,200,80,.8)"/></g>
+
+        <g transform="translate(255,155)"><circle r="7" fill="rgba(180,130,210,.55)"/><ellipse ry="6" rx="2.5" fill="rgba(170,120,200,.55)"/><ellipse ry="6" rx="2.5" fill="rgba(175,125,205,.5)" transform="rotate(60)"/><ellipse ry="6" rx="2.5" fill="rgba(170,120,200,.5)" transform="rotate(120)"/><ellipse ry="6" rx="2.5" fill="rgba(175,125,205,.45)" transform="rotate(180)"/><ellipse ry="6" rx="2.5" fill="rgba(170,120,200,.5)" transform="rotate(240)"/><ellipse ry="6" rx="2.5" fill="rgba(175,125,205,.45)" transform="rotate(300)"/><circle r="3.5" fill="rgba(220,200,80,.75)"/></g>
+
+        <!-- Red rose - bottom right -->
+        <g transform="translate(300,285)" filter="url(#softBlur)">
+          <g><ellipse ry="28" rx="12" fill="rgba(210,50,60,.65)"/><ellipse ry="28" rx="12" fill="rgba(215,55,65,.6)" transform="rotate(45)"/><ellipse ry="28" rx="12" fill="rgba(208,48,58,.6)" transform="rotate(90)"/><ellipse ry="28" rx="12" fill="rgba(212,52,62,.55)" transform="rotate(135)"/><ellipse ry="28" rx="12" fill="rgba(210,50,60,.6)" transform="rotate(180)"/><ellipse ry="28" rx="12" fill="rgba(215,55,65,.55)" transform="rotate(225)"/><ellipse ry="28" rx="12" fill="rgba(208,48,58,.6)" transform="rotate(270)"/><ellipse ry="28" rx="12" fill="rgba(212,52,62,.55)" transform="rotate(315)"/></g>
+          <g transform="scale(.65)"><ellipse ry="24" rx="10" fill="rgba(185,25,35,.7)"/><ellipse ry="24" rx="10" fill="rgba(188,28,38,.65)" transform="rotate(60)"/><ellipse ry="24" rx="10" fill="rgba(183,23,33,.65)" transform="rotate(120)"/><ellipse ry="24" rx="10" fill="rgba(186,26,36,.6)" transform="rotate(180)"/><ellipse ry="24" rx="10" fill="rgba(185,25,35,.65)" transform="rotate(240)"/><ellipse ry="24" rx="10" fill="rgba(188,28,38,.6)" transform="rotate(300)"/></g>
+          <circle r="9" fill="rgba(150,10,20,.75)"/>
+          <circle r="5" fill="rgba(120,5,15,.8)"/>
+        </g>
+
+        <!-- Leaves scattered -->
+        <ellipse cx="145" cy="180" rx="14" ry="7" fill="rgba(80,120,60,.5)" transform="rotate(-20,145,180)"/>
+        <ellipse cx="255" cy="250" rx="12" ry="6" fill="rgba(70,110,50,.45)" transform="rotate(25,255,250)"/>
+        <ellipse cx="170" cy="250" rx="10" ry="5" fill="rgba(85,125,65,.45)" transform="rotate(-35,170,250)"/>
+        <ellipse cx="235" cy="130" rx="11" ry="5" fill="rgba(75,115,55,.4)" transform="rotate(15,235,130)"/>
+        <ellipse cx="340" cy="175" rx="13" ry="6" fill="rgba(80,120,60,.4)" transform="rotate(-15,340,175)"/>
+        <ellipse cx="115" cy="155" rx="10" ry="5" fill="rgba(70,110,50,.4)" transform="rotate(30,115,155)"/>
+
+        <!-- Soft white overlay for depth -->
+        <radialGradient id="bgFloral" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="rgba(255,255,255,.1)"/>
+          <stop offset="100%" stop-color="rgba(255,240,245,.05)"/>
+        </radialGradient>
+      </g>
+
+      <!-- Heart outline subtle -->
+      <path d="M200 340 C200 340 40 260 40 150 C40 100 75 65 120 65 C150 65 175 80 200 105 C225 80 250 65 280 65 C325 65 360 100 360 150 C360 260 200 340 200 340 Z" fill="none" stroke="rgba(200,150,160,.15)" stroke-width="2"/>
+    </svg>
+  </div>
+  <p class="p1-hint">tap to continue ✿</p>
+</div>
+
+<!-- ═══ PAGE 2: FULL BLOOM ═══ -->
+<div class="pg" id="pg2" onclick="goPage('pg3')">
+  <div class="bloom-scene">
+    <!-- Full screen flower collage SVG -->
+    <svg class="bloom-img" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:110%;height:110%">
+      <defs>
+        <filter id="blur1"><feGaussianBlur stdDeviation="1"/></filter>
+        <filter id="blur2"><feGaussianBlur stdDeviation="1.5"/></filter>
+      </defs>
+      <rect width="800" height="600" fill="#f8e8e0"/>
+
+      <!-- LAYER 1 - Large background flowers -->
+      <!-- Big pink rose BG -->
+      <g transform="translate(80,80)" filter="url(#blur1)"><g><ellipse ry="75" rx="30" fill="rgba(235,170,185,.5)"/><ellipse ry="75" rx="30" fill="rgba(240,175,190,.45)" transform="rotate(40)"/><ellipse ry="75" rx="30" fill="rgba(233,168,183,.45)" transform="rotate(80)"/><ellipse ry="75" rx="30" fill="rgba(237,172,187,.4)" transform="rotate(120)"/><ellipse ry="75" rx="30" fill="rgba(235,170,185,.45)" transform="rotate(160)"/><ellipse ry="75" rx="30" fill="rgba(240,175,190,.4)" transform="rotate(200)"/><ellipse ry="75" rx="30" fill="rgba(233,168,183,.45)" transform="rotate(240)"/><ellipse ry="75" rx="30" fill="rgba(237,172,187,.4)" transform="rotate(280)"/><ellipse ry="75" rx="30" fill="rgba(235,170,185,.45)" transform="rotate(320)"/></g><circle r="28" fill="rgba(190,100,120,.6)"/><circle r="16" fill="rgba(165,75,95,.65)"/></g>
+
+      <!-- Big orange flower BG right -->
+      <g transform="translate(720,100)" filter="url(#blur1)"><g><ellipse ry="65" rx="26" fill="rgba(245,175,110,.5)"/><ellipse ry="65" rx="26" fill="rgba(250,180,115,.45)" transform="rotate(45)"/><ellipse ry="65" rx="26" fill="rgba(243,173,108,.45)" transform="rotate(90)"/><ellipse ry="65" rx="26" fill="rgba(247,177,112,.4)" transform="rotate(135)"/><ellipse ry="65" rx="26" fill="rgba(245,175,110,.45)" transform="rotate(180)"/><ellipse ry="65" rx="26" fill="rgba(250,180,115,.4)" transform="rotate(225)"/><ellipse ry="65" rx="26" fill="rgba(243,173,108,.45)" transform="rotate(270)"/><ellipse ry="65" rx="26" fill="rgba(247,177,112,.4)" transform="rotate(315)"/></g><circle r="24" fill="rgba(190,95,45,.6)"/></g>
+
+      <!-- Large daisy BG bottom -->
+      <g transform="translate(400,520)" filter="url(#blur1)"><g><ellipse ry="55" rx="18" fill="rgba(255,255,255,.75)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.7)" transform="rotate(30)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.72)" transform="rotate(60)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.68)" transform="rotate(90)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.72)" transform="rotate(120)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.68)" transform="rotate(150)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.72)" transform="rotate(180)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.68)" transform="rotate(210)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.72)" transform="rotate(240)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.68)" transform="rotate(270)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.72)" transform="rotate(300)"/><ellipse ry="55" rx="18" fill="rgba(255,255,255,.68)" transform="rotate(330)"/></g><circle r="28" fill="#f5b820"/><circle r="18" fill="#e09010"/></g>
+
+      <!-- LAYER 2 - Mid flowers -->
+      <!-- Pink peony center -->
+      <g transform="translate(390,270)"><g><ellipse ry="65" rx="26" fill="rgba(248,195,210,.7)"/><ellipse ry="65" rx="26" fill="rgba(252,200,215,.65)" transform="rotate(36)"/><ellipse ry="65" rx="26" fill="rgba(246,193,208,.65)" transform="rotate(72)"/><ellipse ry="65" rx="26" fill="rgba(250,197,212,.6)" transform="rotate(108)"/><ellipse ry="65" rx="26" fill="rgba(248,195,210,.65)" transform="rotate(144)"/><ellipse ry="65" rx="26" fill="rgba(252,200,215,.6)" transform="rotate(180)"/><ellipse ry="65" rx="26" fill="rgba(246,193,208,.65)" transform="rotate(216)"/><ellipse ry="65" rx="26" fill="rgba(250,197,212,.6)" transform="rotate(252)"/><ellipse ry="65" rx="26" fill="rgba(248,195,210,.65)" transform="rotate(288)"/><ellipse ry="65" rx="26" fill="rgba(252,200,215,.6)" transform="rotate(324)"/></g><g transform="scale(.72)"><ellipse ry="56" rx="22" fill="rgba(225,155,175,.75)"/><ellipse ry="56" rx="22" fill="rgba(228,158,178,.7)" transform="rotate(45)"/><ellipse ry="56" rx="22" fill="rgba(223,153,173,.7)" transform="rotate(90)"/><ellipse ry="56" rx="22" fill="rgba(226,156,176,.65)" transform="rotate(135)"/><ellipse ry="56" rx="22" fill="rgba(225,155,175,.7)" transform="rotate(180)"/><ellipse ry="56" rx="22" fill="rgba(228,158,178,.65)" transform="rotate(225)"/><ellipse ry="56" rx="22" fill="rgba(223,153,173,.7)" transform="rotate(270)"/><ellipse ry="56" rx="22" fill="rgba(226,156,176,.65)" transform="rotate(315)"/></g><circle r="20" fill="rgba(195,105,130,.75)"/><circle r="12" fill="rgba(170,80,105,.8)"/></g>
+
+      <!-- Sunflower top center -->
+      <g transform="translate(400,80)"><g><ellipse ry="48" rx="17" fill="#f7cb3c" opacity=".92"/><ellipse ry="48" rx="17" fill="#f2c535" opacity=".88" transform="rotate(30)"/><ellipse ry="48" rx="17" fill="#f7cb3c" opacity=".88" transform="rotate(60)"/><ellipse ry="48" rx="17" fill="#f2c535" opacity=".84" transform="rotate(90)"/><ellipse ry="48" rx="17" fill="#f7cb3c" opacity=".88" transform="rotate(120)"/><ellipse ry="48" rx="17" fill="#f2c535" opacity=".84" transform="rotate(150)"/><ellipse ry="48" rx="17" fill="#f7cb3c" opacity=".88" transform="rotate(180)"/><ellipse ry="48" rx="17" fill="#f2c535" opacity=".84" transform="rotate(210)"/><ellipse ry="48" rx="17" fill="#f7cb3c" opacity=".88" transform="rotate(240)"/><ellipse ry="48" rx="17" fill="#f2c535" opacity=".84" transform="rotate(270)"/><ellipse ry="48" rx="17" fill="#f7cb3c" opacity=".88" transform="rotate(300)"/><ellipse ry="48" rx="17" fill="#f2c535" opacity=".84" transform="rotate(330)"/></g><circle r="28" fill="#4a2808"/><circle r="20" fill="#3a1a04"/></g>
+
+      <!-- Red rose left mid -->
+      <g transform="translate(160,300)"><g><ellipse ry="50" rx="20" fill="rgba(215,55,65,.7)"/><ellipse ry="50" rx="20" fill="rgba(220,60,70,.65)" transform="rotate(45)"/><ellipse ry="50" rx="20" fill="rgba(213,53,63,.65)" transform="rotate(90)"/><ellipse ry="50" rx="20" fill="rgba(217,57,67,.6)" transform="rotate(135)"/><ellipse ry="50" rx="20" fill="rgba(215,55,65,.65)" transform="rotate(180)"/><ellipse ry="50" rx="20" fill="rgba(220,60,70,.6)" transform="rotate(225)"/><ellipse ry="50" rx="20" fill="rgba(213,53,63,.65)" transform="rotate(270)"/><ellipse ry="50" rx="20" fill="rgba(217,57,67,.6)" transform="rotate(315)"/></g><g transform="scale(.68)"><ellipse ry="43" rx="17" fill="rgba(185,25,35,.75)"/><ellipse ry="43" rx="17" fill="rgba(188,28,38,.7)" transform="rotate(60)"/><ellipse ry="43" rx="17" fill="rgba(183,23,33,.7)" transform="rotate(120)"/><ellipse ry="43" rx="17" fill="rgba(186,26,36,.65)" transform="rotate(180)"/><ellipse ry="43" rx="17" fill="rgba(185,25,35,.7)" transform="rotate(240)"/><ellipse ry="43" rx="17" fill="rgba(188,28,38,.65)" transform="rotate(300)"/></g><circle r="16" fill="rgba(148,10,20,.8)"/></g>
+
+      <!-- Hydrangea cluster right -->
+      <g transform="translate(640,300)"><g transform="translate(-20,-15)"><circle r="18" fill="rgba(148,168,228,.65)"/><circle cx="8" cy="-6" r="7" fill="rgba(140,160,220,.55)"/><circle cx="-8" cy="-6" r="7" fill="rgba(135,155,215,.5)"/><circle cx="0" cy="10" r="7" fill="rgba(145,165,225,.55)"/></g><g transform="translate(18,-8)"><circle r="16" fill="rgba(148,168,228,.6)"/><circle cx="7" cy="-5" r="6" fill="rgba(140,160,220,.5)"/><circle cx="-7" cy="-5" r="6" fill="rgba(135,155,215,.45)"/><circle cx="0" cy="8" r="6" fill="rgba(145,165,225,.5)"/></g><g transform="translate(0,22)"><circle r="18" fill="rgba(148,168,228,.65)"/><circle cx="8" cy="-6" r="7" fill="rgba(140,160,220,.55)"/><circle cx="-8" cy="-6" r="7" fill="rgba(135,155,215,.5)"/><circle cx="0" cy="10" r="7" fill="rgba(145,165,225,.55)"/></g><g transform="translate(-22,12)"><circle r="14" fill="rgba(148,168,228,.6)"/><circle cx="6" cy="-4" r="5.5" fill="rgba(140,160,220,.5)"/><circle cx="-6" cy="-4" r="5.5" fill="rgba(135,155,215,.45)"/><circle cx="0" cy="7" r="5.5" fill="rgba(145,165,225,.5)"/></g></g>
+
+      <!-- White daisies scattered -->
+      <g transform="translate(250,150)"><g><ellipse ry="30" rx="10" fill="white" opacity=".92"/><ellipse ry="30" rx="10" fill="white" opacity=".88" transform="rotate(30)"/><ellipse ry="30" rx="10" fill="white" opacity=".9" transform="rotate(60)"/><ellipse ry="30" rx="10" fill="white" opacity=".86" transform="rotate(90)"/><ellipse ry="30" rx="10" fill="white" opacity=".9" transform="rotate(120)"/><ellipse ry="30" rx="10" fill="white" opacity=".86" transform="rotate(150)"/><ellipse ry="30" rx="10" fill="white" opacity=".9" transform="rotate(180)"/><ellipse ry="30" rx="10" fill="white" opacity=".86" transform="rotate(210)"/><ellipse ry="30" rx="10" fill="white" opacity=".9" transform="rotate(240)"/><ellipse ry="30" rx="10" fill="white" opacity=".86" transform="rotate(270)"/><ellipse ry="30" rx="10" fill="white" opacity=".9" transform="rotate(300)"/><ellipse ry="30" rx="10" fill="white" opacity=".86" transform="rotate(330)"/></g><circle r="15" fill="#f8c520"/><circle r="9" fill="#e5a010"/></g>
+
+      <g transform="translate(570,180)"><g><ellipse ry="25" rx="9" fill="white" opacity=".9"/><ellipse ry="25" rx="9" fill="white" opacity=".85" transform="rotate(30)"/><ellipse ry="25" rx="9" fill="white" opacity=".88" transform="rotate(60)"/><ellipse ry="25" rx="9" fill="white" opacity=".83" transform="rotate(90)"/><ellipse ry="25" rx="9" fill="white" opacity=".88" transform="rotate(120)"/><ellipse ry="25" rx="9" fill="white" opacity=".83" transform="rotate(150)"/><ellipse ry="25" rx="9" fill="white" opacity=".88" transform="rotate(180)"/><ellipse ry="25" rx="9" fill="white" opacity=".83" transform="rotate(210)"/><ellipse ry="25" rx="9" fill="white" opacity=".88" transform="rotate(240)"/><ellipse ry="25" rx="9" fill="white" opacity=".83" transform="rotate(270)"/><ellipse ry="25" rx="9" fill="white" opacity=".88" transform="rotate(300)"/><ellipse ry="25" rx="9" fill="white" opacity=".83" transform="rotate(330)"/></g><circle r="13" fill="#f5b820"/><circle r="8" fill="#e09010"/></g>
+
+      <!-- Pink/magenta flowers bottom -->
+      <g transform="translate(200,480)"><g><ellipse ry="40" rx="16" fill="rgba(230,90,150,.7)"/><ellipse ry="40" rx="16" fill="rgba(235,95,155,.65)" transform="rotate(45)"/><ellipse ry="40" rx="16" fill="rgba(228,88,148,.65)" transform="rotate(90)"/><ellipse ry="40" rx="16" fill="rgba(232,92,152,.6)" transform="rotate(135)"/><ellipse ry="40" rx="16" fill="rgba(230,90,150,.65)" transform="rotate(180)"/><ellipse ry="40" rx="16" fill="rgba(235,95,155,.6)" transform="rotate(225)"/><ellipse ry="40" rx="16" fill="rgba(228,88,148,.65)" transform="rotate(270)"/><ellipse ry="40" rx="16" fill="rgba(232,92,152,.6)" transform="rotate(315)"/></g><circle r="14" fill="rgba(185,30,90,.75)"/></g>
+
+      <g transform="translate(580,450)"><g><ellipse ry="38" rx="15" fill="rgba(235,145,170,.7)"/><ellipse ry="38" rx="15" fill="rgba(240,150,175,.65)" transform="rotate(45)"/><ellipse ry="38" rx="15" fill="rgba(233,143,168,.65)" transform="rotate(90)"/><ellipse ry="38" rx="15" fill="rgba(237,147,172,.6)" transform="rotate(135)"/><ellipse ry="38" rx="15" fill="rgba(235,145,170,.65)" transform="rotate(180)"/><ellipse ry="38" rx="15" fill="rgba(240,150,175,.6)" transform="rotate(225)"/><ellipse ry="38" rx="15" fill="rgba(233,143,168,.65)" transform="rotate(270)"/><ellipse ry="38" rx="15" fill="rgba(237,147,172,.6)" transform="rotate(315)"/></g><circle r="13" fill="rgba(185,75,110,.75)"/></g>
+
+      <!-- Leaves everywhere -->
+      <ellipse cx="310" cy="220" rx="22" ry="10" fill="rgba(80,120,55,.45)" transform="rotate(-25,310,220)"/>
+      <ellipse cx="500" cy="350" rx="18" ry="8" fill="rgba(70,110,50,.4)" transform="rotate(20,500,350)"/>
+      <ellipse cx="130" cy="420" rx="20" ry="9" fill="rgba(85,125,60,.4)" transform="rotate(-30,130,420)"/>
+      <ellipse cx="670" cy="380" rx="20" ry="9" fill="rgba(75,115,50,.4)" transform="rotate(15,670,380)"/>
+      <ellipse cx="480" cy="150" rx="16" ry="7" fill="rgba(80,120,55,.38)" transform="rotate(-15,480,150)"/>
+      <ellipse cx="290" cy="380" rx="18" ry="8" fill="rgba(70,110,50,.38)" transform="rotate(30,290,380)"/>
+      <ellipse cx="620" cy="140" rx="15" ry="7" fill="rgba(85,125,60,.38)" transform="rotate(-20,620,140)"/>
+    </svg>
+  </div>
+  <p class="bloom-tap">✿ tap to read ✿</p>
+</div>
+
+<!-- ═══ PAGE 3: LETTER + PHOTOS ═══ -->
+<div class="pg" id="pg3">
+  <!-- Dark botanical background SVG -->
+  <div class="botanic-scene">
+    <svg width="100%" height="100%" viewBox="0 0 400 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+      <!-- Dark base -->
+      <rect width="400" height="800" fill="#1a1814"/>
+
+      <!-- Botanical vine art - dark grey/charcoal like in video -->
+      <!-- Large sunflower BG top right -->
+      <g transform="translate(360,120)" opacity=".12">
+        <g><ellipse ry="80" rx="28" fill="#888"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(30)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(60)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(90)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(120)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(150)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(180)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(210)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(240)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(270)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(300)"/><ellipse ry="80" rx="28" fill="#888" transform="rotate(330)"/></g>
+        <circle r="36" fill="#666"/>
+      </g>
+
+      <!-- Vine left bottom -->
+      <g opacity=".14" stroke="#7a8a6a" stroke-width="2.5" fill="none">
+        <path d="M-20 800 Q20 720 10 650 Q0 580 30 520 Q60 460 40 400 Q20 340 50 280"/>
+        <path d="M10 650 Q-20 630 -30 610"/>
+        <path d="M30 520 Q60 500 70 480"/>
+        <path d="M40 400 Q10 380 0 360"/>
+        <!-- Leaves on vine -->
+        <ellipse cx="-25" cy="615" rx="18" ry="9" fill="#5a7a45" stroke="none" transform="rotate(-40,-25,615)" opacity=".7"/>
+        <ellipse cx="65" cy="485" rx="16" ry="8" fill="#5a7a45" stroke="none" transform="rotate(25,65,485)" opacity=".65"/>
+        <ellipse cx="8" cy="363" rx="15" ry="7" fill="#5a7a45" stroke="none" transform="rotate(-15,8,363)" opacity=".6"/>
+      </g>
+
+      <!-- Vine right bottom -->
+      <g opacity=".12" stroke="#7a8a6a" stroke-width="2.5" fill="none">
+        <path d="M420 800 Q380 720 390 640 Q400 560 370 490 Q340 420 365 350"/>
+        <path d="M390 640 Q420 618 430 595"/>
+        <path d="M370 490 Q400 470 410 448"/>
+        <ellipse cx="428" cy="600" rx="17" ry="8" fill="#5a7a45" stroke="none" transform="rotate(35,428,600)" opacity=".65"/>
+        <ellipse cx="408" cy="452" rx="15" ry="7" fill="#5a7a45" stroke="none" transform="rotate(-20,408,452)" opacity=".6"/>
+      </g>
+
+      <!-- Subtle flower silhouettes -->
+      <g opacity=".07" fill="#aaa">
+        <circle cx="50" cy="200" r="35"/><ellipse cx="50" cy="165" rx="12" ry="25"/><ellipse cx="50" cy="165" rx="12" ry="25" transform="rotate(45,50,200)"/><ellipse cx="50" cy="165" rx="12" ry="25" transform="rotate(90,50,200)"/><ellipse cx="50" cy="165" rx="12" ry="25" transform="rotate(135,50,200)"/><ellipse cx="50" cy="165" rx="12" ry="25" transform="rotate(180,50,200)"/><ellipse cx="50" cy="165" rx="12" ry="25" transform="rotate(225,50,200)"/><ellipse cx="50" cy="165" rx="12" ry="25" transform="rotate(270,50,200)"/><ellipse cx="50" cy="165" rx="12" ry="25" transform="rotate(315,50,200)"/>
+      </g>
+      <g opacity=".06" fill="#aaa">
+        <circle cx="360" cy="600" r="30"/><ellipse cx="360" cy="570" rx="10" ry="22"/><ellipse cx="360" cy="570" rx="10" ry="22" transform="rotate(45,360,600)"/><ellipse cx="360" cy="570" rx="10" ry="22" transform="rotate(90,360,600)"/><ellipse cx="360" cy="570" rx="10" ry="22" transform="rotate(135,360,600)"/><ellipse cx="360" cy="570" rx="10" ry="22" transform="rotate(180,360,600)"/><ellipse cx="360" cy="570" rx="10" ry="22" transform="rotate(225,360,600)"/><ellipse cx="360" cy="570" rx="10" ry="22" transform="rotate(270,360,600)"/><ellipse cx="360" cy="570" rx="10" ry="22" transform="rotate(315,360,600)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="p3-scroll">
+    <div style="width:100%;max-width:420px">
+      <div class="stamp-card">
+        <div class="stamp-ls"></div>
+        <div class="stamp-rs"></div>
+
+        <!-- Polaroid strip -->
+        <div class="pol-strip" id="pol-strip"></div>
+
+        <!-- Bouquet decoration -->
+        <div class="letter-bouquet">
+          <svg width="60" height="80" viewBox="0 0 60 80">
+            <!-- Bouquet wrap -->
+            <path d="M20 75 L30 40 L40 75 Z" fill="#d4b896"/>
+            <path d="M22 75 L30 45 L38 75 Z" fill="#c4a886"/>
+            <!-- Ribbon -->
+            <ellipse cx="30" cy="55" rx="8" ry="4" fill="#5a9a80" opacity=".8"/>
+            <!-- Flowers -->
+            <g transform="translate(30,35)"><ellipse ry="10" rx="4" fill="rgba(220,100,120,.8)"/><ellipse ry="10" rx="4" fill="rgba(225,105,125,.75)" transform="rotate(45)"/><ellipse ry="10" rx="4" fill="rgba(218,98,118,.75)" transform="rotate(90)"/><ellipse ry="10" rx="4" fill="rgba(222,102,122,.7)" transform="rotate(135)"/><ellipse ry="10" rx="4" fill="rgba(220,100,120,.75)" transform="rotate(180)"/><ellipse ry="10" rx="4" fill="rgba(225,105,125,.7)" transform="rotate(225)"/><ellipse ry="10" rx="4" fill="rgba(218,98,118,.75)" transform="rotate(270)"/><ellipse ry="10" rx="4" fill="rgba(222,102,122,.7)" transform="rotate(315)"/><circle r="5" fill="rgba(185,60,80,.85)"/></g>
+            <g transform="translate(18,22)"><ellipse ry="8" rx="3" fill="rgba(245,185,100,.85)"/><ellipse ry="8" rx="3" fill="rgba(248,188,103,.8)" transform="rotate(45)"/><ellipse ry="8" rx="3" fill="rgba(243,183,98,.8)" transform="rotate(90)"/><ellipse ry="8" rx="3" fill="rgba(246,186,101,.75)" transform="rotate(135)"/><ellipse ry="8" rx="3" fill="rgba(245,185,100,.8)" transform="rotate(180)"/><ellipse ry="8" rx="3" fill="rgba(248,188,103,.75)" transform="rotate(225)"/><ellipse ry="8" rx="3" fill="rgba(243,183,98,.8)" transform="rotate(270)"/><ellipse ry="8" rx="3" fill="rgba(246,186,101,.75)" transform="rotate(315)"/><circle r="4" fill="rgba(190,110,30,.8)"/></g>
+            <g transform="translate(42,25)"><ellipse ry="8" rx="3" fill="rgba(200,130,200,.8)"/><ellipse ry="8" rx="3" fill="rgba(205,135,205,.75)" transform="rotate(60)"/><ellipse ry="8" rx="3" fill="rgba(198,128,198,.75)" transform="rotate(120)"/><ellipse ry="8" rx="3" fill="rgba(202,132,202,.7)" transform="rotate(180)"/><ellipse ry="8" rx="3" fill="rgba(200,130,200,.75)" transform="rotate(240)"/><ellipse ry="8" rx="3" fill="rgba(205,135,205,.7)" transform="rotate(300)"/><circle r="3.5" fill="rgba(220,200,80,.8)"/></g>
+            <!-- Leaves -->
+            <ellipse cx="14" cy="40" rx="8" ry="4" fill="#6a9850" opacity=".7" transform="rotate(-30,14,40)"/>
+            <ellipse cx="46" cy="38" rx="7" ry="3.5" fill="#7aaa60" opacity=".65" transform="rotate(25,46,38)"/>
+          </svg>
+        </div>
+
+        <div class="stamp-inner">
+          <!-- Header -->
+          <div class="letter-hdr">
+            <div class="lh-tf">
+              <div class="lh-row">
+                <span class="lh-lbl">To</span>
+                <span class="lh-name" id="lh-to">...</span>
+              </div>
+              <div class="lh-row" style="margin-top:.3rem">
+                <span class="lh-lbl">From</span>
+                <span class="lh-name" id="lh-from">...</span>
+              </div>
+            </div>
+            <div class="lh-right">
+              <div class="postage-box" id="postage-ico">🌹</div>
+              <span class="paperclip">📎</span>
+            </div>
+          </div>
+
+          <!-- Letter lines -->
+          <div class="letter-lined">
+            <div class="letter-body" id="letter-body"></div>
+          </div>
+          <div class="letter-sign" id="letter-sign"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="flora-nav">
+    <button class="fnav-btn primary" id="vid-btn" onclick="goPage('pg4')" style="display:none">▶ Video</button>
+    <button class="fnav-btn" onclick="goPage('pg2')">← Balik</button>
+  </div>
+</div>
+
+<!-- ═══ PAGE 4: VIDEO ═══ -->
+<div class="pg" id="pg4">
+  <div class="botanic-scene">
+    <svg width="100%" height="100%" viewBox="0 0 400 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+      <rect width="400" height="800" fill="#1a1814"/>
+      <g opacity=".12" stroke="#7a8a6a" stroke-width="2.5" fill="none"><path d="M-20 800 Q20 700 15 600 Q10 500 35 420"/><path d="M15 600 Q-15 578 -25 555"/><ellipse cx="-22" cy="560" rx="16" ry="8" fill="#5a7a45" stroke="none" transform="rotate(-35,-22,560)" opacity=".7"/></g>
+      <g opacity=".08" fill="#aaa"><circle cx="350" cy="150" r="28"/><ellipse cx="350" cy="122" rx="9" ry="20"/><ellipse cx="350" cy="122" rx="9" ry="20" transform="rotate(45,350,150)"/><ellipse cx="350" cy="122" rx="9" ry="20" transform="rotate(90,350,150)"/><ellipse cx="350" cy="122" rx="9" ry="20" transform="rotate(135,350,150)"/><ellipse cx="350" cy="122" rx="9" ry="20" transform="rotate(180,350,150)"/><ellipse cx="350" cy="122" rx="9" ry="20" transform="rotate(225,350,150)"/><ellipse cx="350" cy="122" rx="9" ry="20" transform="rotate(270,350,150)"/><ellipse cx="350" cy="122" rx="9" ry="20" transform="rotate(315,350,150)"/></g>
+    </svg>
+  </div>
+  <div class="p4-inner">
+    <div class="p4-divider"><div class="p4-line"></div><div class="p4-rose">🌸</div><div class="p4-line"></div></div>
+    <p class="p4-title" id="p4-title">Untuk Kamu 🎥</p>
+    <p class="p4-sub" id="p4-sub">dengan penuh kasih sayang ✿</p>
+    <div class="vid-frame" id="vid-frame"></div>
+    <div class="p4-divider"><div class="p4-line"></div><div class="p4-rose">🌺</div><div class="p4-line"></div></div>
+    <button class="fnav-btn" onclick="goPage('pg3')">← Kembali ke Surat</button>
+  </div>
+</div>
+
+<div style="position:fixed;bottom:-300px;left:-300px;width:1px;height:1px;overflow:hidden;pointer-events:none"><div id="ytp"></div></div>
+
+<script>
+const SB='https://lejpuajafuenlfvlovfg.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlanB1YWphZnVlbmxmdmxvdmZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjYyNTAsImV4cCI6MjA5MjcwMjI1MH0.rwABj8DyY3dijUr5TurtMoemZgG2b9LgSHSicUMxMmc';
+const cur=document.getElementById('cur');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+
+async function load(){
+  const p=new URLSearchParams(window.location.search);
+  const id=p.get('id');
+  if(!id){showErr();return}
+  try{
+    const r=await fetch(`${SB}/rest/v1/gifts?id=eq.${id}&select=*`,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}});
+    if(!r.ok)throw new Error();
+    const d=await r.json();
+    if(!d||!d.length){showErr();return}
+    build(d[0]);
+    const ld=document.getElementById('loading');
+    ld.style.opacity='0';
+    setTimeout(()=>ld.style.display='none',1200);
+  }catch(e){showErr()}
+}
+function showErr(){document.getElementById('loading').style.display='none';document.getElementById('err').style.display='flex'}
+
+function build(G){
+  const k=G.kategori||'anniversary';
+  /* Letter */
+  document.getElementById('lh-to').textContent=G.nama2||'Sayang';
+  document.getElementById('lh-from').textContent=G.nama1||'Kamu';
+  const stamps={birthday:'🎂',anniversary:'🌹',raya:'🌙',kawan:'🌻'};
+  document.getElementById('postage-ico').textContent=stamps[k]||'🌸';
+  const body=document.getElementById('letter-body');
+  [G.b1,G.b2,G.b3].filter(Boolean).forEach(t=>{const p=document.createElement('p');p.textContent=t;p.style.marginBottom='.5rem';body.appendChild(p)});
+  document.getElementById('letter-sign').textContent=`— ${G.nama1||'Kamu'} 🌸`;
+
+  /* Polaroids */
+  const strip=document.getElementById('pol-strip');
+  const bgs=['linear-gradient(135deg,#e8d0d8,#d8c0c8)','linear-gradient(135deg,#d8e8f0,#c8d8e8)','linear-gradient(135deg,#e8e0d8,#d8d0c8)'];
+  for(let i=0;i<3;i++){
+    const pol=document.createElement('div');pol.className='pol';
+    const img=document.createElement('div');img.className='pol-img';img.style.background=bgs[i];
+    if(G.photos&&G.photos[i]){const im=document.createElement('img');im.src=G.photos[i];img.appendChild(im)}
+    else img.textContent='📷';
+    pol.appendChild(img);strip.appendChild(pol);
+  }
+
+  /* Video */
+  const wrap=document.getElementById('vid-frame');
+  let hasVid=false;
+  if(G.video_url){
+    const yt=G.video_url.match(/(?:youtu\.be\/|[?&]v=)([a-zA-Z0-9_-]{11})/);
+    if(yt){const iframe=document.createElement('iframe');iframe.src=`https://www.youtube.com/embed/${yt[1]}?rel=0&modestbranding=1&playsinline=1`;iframe.allowFullscreen=true;wrap.appendChild(iframe);hasVid=true;document.getElementById('p4-title').textContent='Video Untuk Kamu 🎥'}
+  } else if(G.video_data){
+    const vid=document.createElement('video');vid.src=G.video_data;vid.controls=true;vid.playsInline=true;wrap.appendChild(vid);hasVid=true;
+  } else if(G.lagu_id){
+    const iframe=document.createElement('iframe');iframe.src=`https://www.youtube.com/embed/${G.lagu_id}?rel=0&modestbranding=1&playsinline=1`;iframe.allowFullscreen=true;wrap.appendChild(iframe);hasVid=true;
+    document.getElementById('p4-title').textContent=G.lagu_nama||'Lagu Kita 🎵';
+    document.getElementById('p4-sub').textContent=G.lagu_artis||'';
+  }
+  if(hasVid)document.getElementById('vid-btn').style.display='inline-block';
+
+  /* Music */
+  if(G.lagu_id){document.getElementById('mb-t').textContent=G.lagu_nama||'Lagu Kita';document.getElementById('mb-a').textContent=G.lagu_artis||'';window._lid=G.lagu_id}
+}
+
+function goPage(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo({top:0,behavior:'instant'});
+  if(id==='pg3'){playMusic();showMbar()}
+}
+
+function openEnv(){
+  const el=document.getElementById('env-el');
+  el.style.transition='all .5s cubic-bezier(.22,1,.36,1)';
+  el.style.transform='scale(1.12)';el.style.opacity='0';
+  setTimeout(()=>goPage('pg1'),450);
+}
+
+/* YouTube */
+let yp=null,yr=false,ypl=false;
+function lyt(){if(document.querySelector('script[src*="youtube.com/iframe_api"]'))return;const t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t)}
+window.onYouTubeIframeAPIReady=function(){
+  if(!window._lid)return;
+  yp=new YT.Player('ytp',{height:'1',width:'1',videoId:window._lid,playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,iv_load_policy:3,modestbranding:1,rel:0,playsinline:1},events:{onReady:()=>{yr=true},onStateChange:e=>{if(e.data===1){document.getElementById('mb-disc').classList.add('sp');document.getElementById('mb-play').textContent='⏸';ypl=true;upBar()}else if(e.data===2||e.data===0){document.getElementById('mb-disc').classList.remove('sp');document.getElementById('mb-play').textContent='▶';ypl=false}}}});
+};
+function playMusic(){if(!window._lid)return;lyt();const t=setInterval(()=>{if(yr&&yp){yp.playVideo();clearInterval(t)}},200)}
+function tgp(){if(!yp)return;ypl?yp.pauseVideo():yp.playVideo()}
+function tgm(){if(!yp)return;yp.isMuted()?yp.unMute():yp.mute()}
+function ska(e){if(!yp||!yr)return;const r=e.currentTarget.getBoundingClientRect();yp.seekTo((e.clientX-r.left)/r.width*yp.getDuration(),true)}
+function upBar(){if(!yp||!ypl)return;const d=yp.getDuration(),c=yp.getCurrentTime();if(d>0)document.getElementById('mb-fill').style.width=(c/d*100)+'%';if(ypl)setTimeout(upBar,800)}
+function showMbar(){document.getElementById('mbar').classList.add('on')}
+
+load();
+</script>
+</body>
+</html>
