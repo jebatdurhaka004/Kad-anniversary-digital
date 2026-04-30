@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:'Nunito',sans-serif;background:#e8c9a8;touch-action:manipulation}
+
+/* ══ PAGES ══ */
+.pg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column}
+.pg.on{display:flex}
+
+/* ══════════════════════════════
+   PAGE 0 — ENVELOPE
+   Warm beige bg. Small purple
+   envelope centre. "klik" below.
+   Gentle bounce animation.
+══════════════════════════════ */
+#p0{background:#e8c9a8}
+
+.env-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:1.2rem;
+  cursor:pointer;
+  animation:envBounce 1.8s cubic-bezier(.36,.07,.19,.97) infinite;
+}
+@keyframes envBounce{
+  0%,100%{transform:translateY(0)}
+  30%{transform:translateY(-12px)}
+  50%{transform:translateY(-6px)}
+  70%{transform:translateY(-10px)}
+}
+.env-wrap:active{animation:none;transform:scale(.92)}
+
+/* Purple envelope — pure CSS */
+.envelope{
+  width:clamp(100px,32vw,130px);
+  position:relative;
+}
+
+/* Envelope body */
+.env-body{
+  width:100%;
+  padding-bottom:72%;
+  position:relative;
+  background:#c8c5e8;
+  border-radius:4px;
+  border:2px solid #a8a5c8;
+  overflow:hidden;
+}
+
+/* Flap top */
+.env-flap{
+  position:absolute;top:0;left:0;right:0;height:52%;
+  background:#b8b5d8;
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  border-bottom:2px solid #a8a5c8;
+  z-index:2;
+}
+
+/* Side triangles */
+.env-sl{position:absolute;left:0;top:0;bottom:0;width:52%;background:#c0bde0;clip-path:polygon(0 0,100% 50%,0 100%)}
+.env-sr{position:absolute;right:0;top:0;bottom:0;width:52%;background:#c0bde0;clip-path:polygon(100% 0,0 50%,100% 100%)}
+.env-sb{position:absolute;bottom:0;left:0;right:0;height:52%;background:#b8b5d8;clip-path:polygon(0 100%,100% 100%,50% 0%)}
+
+.env-klik{
+  font-size:clamp(.75rem,3.5vw,.9rem);
+  color:rgba(120,100,80,.55);
+  letter-spacing:.05em;
+  font-weight:700;
+  animation:kliklBlink 1.5s ease-in-out infinite;
+}
+@keyframes kliklBlink{0%,100%{opacity:.55}50%{opacity:.85}}
+
+/* ══════════════════════════════
+   PAGE 1 — CARD WITH MOCHI + BUTTONS
+   Same warm beige. Rounded card
+   appears from centre. Mochi char,
+   text, Iya/Enggak buttons.
+══════════════════════════════ */
+#p1{background:#e8c9a8}
+
+.main-card{
+  background:#f0e0cc;
+  border-radius:20px;
+  width:min(88vw,360px);
+  padding:0;
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(150,100,70,.15);
+  animation:cardPop .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+
+/* Photo frame inside card */
+.card-frame{
+  margin:1.2rem 1.2rem .8rem;
+  border:1.5px solid rgba(150,120,90,.2);
+  background:#f8ede0;
+  aspect-ratio:1;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  position:relative;
+}
+
+/* Mochi character — pure CSS */
+.mochi{
+  position:relative;
+  width:clamp(80px,28vw,120px);
+  height:clamp(90px,32vw,135px);
+  animation:mochiIdle 2s ease-in-out infinite;
+}
+@keyframes mochiIdle{
+  0%,100%{transform:translateY(0) rotate(0)}
+  40%{transform:translateY(-4px) rotate(1deg)}
+  70%{transform:translateY(-2px) rotate(-.5deg)}
+}
+
+/* Body */
+.mochi-body{
+  position:absolute;
+  bottom:0;left:50%;transform:translateX(-50%);
+  width:75%;height:60%;
+  background:#f5f5f5;
+  border-radius:50% 50% 45% 45%;
+  border:2px solid rgba(0,0,0,.12);
+}
+/* Legs */
+.mochi-body::before,.mochi-body::after{
+  content:'';position:absolute;
+  bottom:-22%;width:30%;height:30%;
+  background:#f5f5f5;border-radius:50%;
+  border:2px solid rgba(0,0,0,.12);
+}
+.mochi-body::before{left:15%}
+.mochi-body::after{right:15%}
+
+/* Head */
+.mochi-head{
+  position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:78%;height:62%;
+  background:#f5f5f5;
+  border-radius:50%;
+  border:2px solid rgba(0,0,0,.12);
+  z-index:2;
+}
+
+/* Eyes */
+.mochi-eye-l,.mochi-eye-r{
+  position:absolute;
+  top:42%;width:10%;height:8%;
+  background:#1a1a1a;
+  border-radius:50%;
+}
+.mochi-eye-l{left:28%}
+.mochi-eye-r{right:28%}
+
+/* Smile */
+.mochi-smile{
+  position:absolute;
+  top:58%;left:50%;transform:translateX(-50%);
+  width:28%;height:10%;
+  border-bottom:2.5px solid rgba(0,0,0,.5);
+  border-radius:0 0 50% 50%;
+}
+
+/* Blush cheeks */
+.mochi-bl,.mochi-br{
+  position:absolute;
+  top:52%;width:18%;height:10%;
+  background:rgba(255,180,180,.5);
+  border-radius:50%;
+}
+.mochi-bl{left:15%}
+.mochi-br{right:15%}
+
+/* Card text */
+.card-text{
+  padding:.5rem 1.4rem 1.2rem;
+  font-size:clamp(1rem,4.5vw,1.18rem);
+  font-weight:800;
+  color:#3a2010;
+  text-align:center;
+  line-height:1.4;
+}
+
+/* Buttons row */
+.card-btns{
+  display:grid;grid-template-columns:1fr 1fr;gap:.7rem;
+  padding:0 1.2rem 1.3rem;
+}
+.card-btn{
+  background:#ffeec0;
+  border:none;border-radius:10px;
+  padding:.75rem .5rem;
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(.88rem,4vw,1.05rem);
+  font-weight:800;color:#4a3010;
+  cursor:pointer;
+  transition:transform .15s,background .15s;
+  box-shadow:0 2px 8px rgba(150,100,50,.12);
+}
+.card-btn:active{transform:scale(.93);background:#ffd880}
+
+/* ══════════════════════════════
+   PAGE 2 — CUTE RESPONSE CARD
+   "ni buat si comel 🍊"
+   Different mochi — shy/love pose
+   Animated character movement
+══════════════════════════════ */
+#p2{background:#e8c9a8}
+
+.cute-card{
+  background:#f0e0cc;
+  border-radius:20px;
+  width:min(88vw,360px);
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(150,100,70,.15);
+  animation:cardPop .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+/* Animated shy mochi */
+.shy-mochi{
+  position:relative;
+  width:clamp(80px,28vw,120px);
+  height:clamp(90px,32vw,135px);
+}
+
+/* Shy mochi body — same but arms up */
+.shy-body{
+  position:absolute;
+  bottom:0;left:50%;transform:translateX(-50%);
+  width:75%;height:58%;
+  background:#f5f5f5;
+  border-radius:50% 50% 45% 45%;
+  border:2px solid rgba(0,0,0,.12);
+}
+.shy-body::before,.shy-body::after{
+  content:'';position:absolute;
+  bottom:-22%;width:30%;height:30%;
+  background:#f5f5f5;border-radius:50%;
+  border:2px solid rgba(0,0,0,.12);
+}
+.shy-body::before{left:15%}
+.shy-body::after{right:15%}
+
+/* Arm raised to cheek */
+.shy-arm{
+  position:absolute;
+  bottom:38%;right:8%;
+  width:22%;height:35%;
+  background:#f5f5f5;
+  border-radius:50%;
+  border:2px solid rgba(0,0,0,.12);
+  transform-origin:bottom center;
+  animation:armWave 1.5s ease-in-out infinite;
+}
+@keyframes armWave{
+  0%,100%{transform:rotate(-20deg)}
+  50%{transform:rotate(10deg)}
+}
+
+/* Shy head */
+.shy-head{
+  position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:78%;height:60%;
+  background:#f5f5f5;
+  border-radius:50%;
+  border:2px solid rgba(0,0,0,.12);
+  z-index:2;
+  animation:shyBob 1.5s ease-in-out infinite;
+}
+@keyframes shyBob{
+  0%,100%{transform:translateX(-50%) rotate(0) translateY(0)}
+  40%{transform:translateX(-50%) rotate(-5deg) translateY(-2px)}
+  70%{transform:translateX(-50%) rotate(3deg) translateY(-1px)}
+}
+
+/* Shy eyes — slightly different */
+.shy-eye-l,.shy-eye-r{
+  position:absolute;
+  top:40%;width:10%;height:9%;
+  background:#1a1a1a;border-radius:50%;
+}
+.shy-eye-l{left:26%}
+.shy-eye-r{right:26%}
+
+/* Shy brows worried/shy */
+.shy-brow-l,.shy-brow-r{
+  position:absolute;
+  top:28%;width:14%;height:3px;
+  background:rgba(0,0,0,.4);border-radius:3px;
+}
+.shy-brow-l{left:22%;transform:rotate(15deg)}
+.shy-brow-r{right:22%;transform:rotate(-15deg)}
+
+/* Shy smile smaller */
+.shy-smile{
+  position:absolute;
+  top:60%;left:50%;transform:translateX(-50%);
+  width:22%;height:8%;
+  border-bottom:2px solid rgba(0,0,0,.45);
+  border-radius:0 0 50% 50%;
+}
+
+/* Big blush when shy */
+.shy-bl,.shy-br{
+  position:absolute;
+  top:50%;width:22%;height:14%;
+  background:rgba(255,160,160,.6);
+  border-radius:50%;
+}
+.shy-bl{left:10%}
+.shy-br{right:10%}
+
+/* Little top cowlick */
+.shy-hair{
+  position:absolute;
+  top:-8%;left:50%;transform:translateX(-50%);
+  width:10%;height:20%;
+  background:#f5f5f5;
+  border-radius:50% 50% 0 0;
+  border:2px solid rgba(0,0,0,.12);
+  border-bottom:none;
+}
+
+.cute-text{
+  padding:.5rem 1.4rem 1.3rem;
+  font-size:clamp(1rem,4.5vw,1.15rem);
+  font-weight:800;
+  color:#3a2010;
+  text-align:center;
+  line-height:1.4;
+}
+
+/* ══════════════════════════════
+   PAGE 3 — TIKTOK ENDING
+   Pure black. TikTok logo centre.
+   Search bar with @hakiku_04
+══════════════════════════════ */
+#p3{background:#000}
+#p3.on{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2.5rem}
+
+.tt-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:.7rem}
+.tt-icon{
+  font-size:3.5rem;
+  animation:ttGlitch 3s steps(1) infinite;
+  filter:drop-shadow(2px 0 0 #ff004f) drop-shadow(-2px 0 0 #00f2ea);
+}
+@keyframes ttGlitch{
+  0%,94%{filter:drop-shadow(2px 0 0 #ff004f) drop-shadow(-2px 0 0 #00f2ea)}
+  95%{filter:drop-shadow(-4px 0 0 #ff004f) drop-shadow(4px 0 0 #00f2ea)}
+  97%{filter:drop-shadow(3px 0 0 #ff004f) drop-shadow(-3px 0 0 #00f2ea)}
+  99%{filter:drop-shadow(-2px 0 0 #ff004f) drop-shadow(2px 0 0 #00f2ea)}
+}
+.tt-text{
+  font-size:1.8rem;font-weight:900;
+  color:#fff;letter-spacing:-.02em;
+  text-shadow:2px 0 0 #ff004f,-2px 0 0 #00f2ea;
+}
+
+.tt-search{
+  display:flex;align-items:center;gap:.6rem;
+  background:#111;
+  border:1.5px solid rgba(255,255,255,.2);
+  border-radius:6px;
+  padding:.6rem 1rem;
+  width:min(80vw,280px);
+  animation:ttBarIn .6s cubic-bezier(.22,1,.36,1) both .3s;
+}
+@keyframes ttBarIn{from{opacity:0;transform:scaleX(.3)}to{opacity:1;transform:scaleX(1)}}
+.tt-search-icon{font-size:1rem;color:rgba(255,255,255,.5)}
+.tt-search-text{
+  font-size:.85rem;font-weight:700;color:#fff;
+  flex:1;letter-spacing:.02em;
+}
+.tt-search-logo{font-size:1.2rem}
+
+/* ══════════════════════════════
+   PAGE: ENGGAK response
+══════════════════════════════ */
+#p-enggak{background:#e8c9a8}
+
+.enggak-card{
+  background:#f0e0cc;
+  border-radius:20px;
+  width:min(88vw,360px);
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(150,100,70,.15);
+  animation:cardPop .5s cubic-bezier(.34,1.56,.64,1) both;
+  text-align:center;
+  padding:2rem 1.5rem;
+}
+.enggak-mochi{
+  font-size:3rem;
+  animation:enggakShake 1s ease-in-out 3;
+}
+@keyframes enggakShake{
+  0%,100%{transform:rotate(0)}
+  20%{transform:rotate(-12deg)}
+  40%{transform:rotate(12deg)}
+  60%{transform:rotate(-8deg)}
+  80%{transform:rotate(8deg)}
+}
+.enggak-text{
+  font-size:clamp(1rem,4.5vw,1.15rem);
+  font-weight:800;color:#3a2010;
+  margin:1rem 0 1.5rem;line-height:1.4;
+}
+.enggak-btn{
+  background:#ffeec0;border:none;border-radius:10px;
+  padding:.75rem 2rem;
+  font-family:'Nunito',sans-serif;
+  font-size:1rem;font-weight:800;color:#4a3010;
+  cursor:pointer;transition:transform .15s;
+}
+.enggak-btn:active{transform:scale(.93)}
+
+/* ══ LOADING ══ */
+#p-load{background:#e8c9a8;z-index:999}
+.load-env{
+  animation:envBounce 1.2s ease-in-out infinite;
+  font-size:3rem;
+}
+.load-txt{
+  font-size:.8rem;font-weight:700;
+  color:rgba(120,90,60,.5);
+  margin-top:.5rem;letter-spacing:.1em;
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="pg on" id="p-load">
+  <div class="load-env">💌</div>
+  <p class="load-txt">loading...</p>
+</div>
+
+<!-- PAGE 0: ENVELOPE -->
+<div class="pg" id="p0">
+  <div class="env-wrap" onclick="openEnvelope()">
+    <div class="envelope">
+      <div class="env-body">
+        <div class="env-flap"></div>
+        <div class="env-sl"></div>
+        <div class="env-sr"></div>
+        <div class="env-sb"></div>
+      </div>
+    </div>
+    <span class="env-klik">klik</span>
+  </div>
+</div>
+
+<!-- PAGE 1: MAIN CARD -->
+<div class="pg" id="p1">
+  <div class="main-card">
+    <div class="card-frame">
+      <div class="mochi">
+        <div class="mochi-body"></div>
+        <div class="mochi-head">
+          <div class="mochi-eye-l"></div>
+          <div class="mochi-eye-r"></div>
+          <div class="mochi-smile"></div>
+          <div class="mochi-bl"></div>
+          <div class="mochi-br"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-text" id="card-text">
+      Hay, cuma mau ucapin,<br>semangat ya 😊
+    </div>
+    <div class="card-btns">
+      <button class="card-btn" onclick="clickIya()">Iya 🤭</button>
+      <button class="card-btn" onclick="clickEnggak()">Enggak 😜</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: CUTE CARD -->
+<div class="pg" id="p2">
+  <div class="cute-card">
+    <div class="card-frame">
+      <div class="shy-mochi">
+        <div class="shy-body"></div>
+        <div class="shy-arm"></div>
+        <div class="shy-head">
+          <div class="shy-hair"></div>
+          <div class="shy-eye-l"></div>
+          <div class="shy-eye-r"></div>
+          <div class="shy-brow-l"></div>
+          <div class="shy-brow-r"></div>
+          <div class="shy-smile"></div>
+          <div class="shy-bl"></div>
+          <div class="shy-br"></div>
+        </div>
+      </div>
+    </div>
+    <div class="cute-text" id="cute-text">
+      😍 ni buat si comel 🍊
+    </div>
+  </div>
+</div>
+
+<!-- PAGE ENGGAK -->
+<div class="pg" id="p-enggak">
+  <div class="enggak-card">
+    <div class="enggak-mochi">😅</div>
+    <div class="enggak-text" id="enggak-text">
+      Yakin enggak? 🥺<br>Aku ikhlas tau...
+    </div>
+    <button class="enggak-btn" onclick="clickIya()">Iya deh 🤭</button>
+  </div>
+</div>
+
+<!-- PAGE 3: TIKTOK ENDING -->
+<div class="pg" id="p3">
+  <div class="tt-logo-wrap">
+    <div class="tt-icon">♪</div>
+    <div class="tt-text">TikTok</div>
+  </div>
+  <div class="tt-search">
+    <span class="tt-search-icon">🔍</span>
+    <span class="tt-search-text">@ hakiku_04</span>
+    <span class="tt-search-logo">♪</span>
+  </div>
+</div>
+
+<script>
+/* ════ SUPABASE ════ */
+const SB = 'https://lejpuajafuenlfvlovfg.supabase.co';
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlanB1YWphZnVlbmxmdmxvdmZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjYyNTAsImV4cCI6MjA5MjcwMjI1MH0.rwABj8DyY3dijUr5TurtMoemZgG2b9LgSHSicUMxMmc';
+
+/* ════ STATE ════ */
+let G = null;
+
+/* ════ NAV ════ */
+function goTo(id) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0, 0);
+}
+
+/* ════ ENVELOPE ════ */
+function openEnvelope() {
+  // Quick scale animation then reveal card
+  const wrap = document.querySelector('.env-wrap');
+  wrap.style.transition = 'transform .3s, opacity .3s';
+  wrap.style.transform = 'scale(1.15)';
+  wrap.style.opacity = '0';
+  setTimeout(() => goTo('p1'), 280);
+}
+
+/* ════ BUTTONS ════ */
+function clickIya() {
+  // Update cute text with person's name if available
+  if (G && G.nama2) {
+    document.getElementById('cute-text').innerHTML =
+      `😍 ni buat si <strong>${G.nama2}</strong> 🍊`;
+  }
+  goTo('p2');
+
+  // After 4 seconds show TikTok ending
+  setTimeout(() => goTo('p3'), 4000);
+}
+
+function clickEnggak() {
+  goTo('p-enggak');
+}
+
+/* ════ LOAD DATA ════ */
+async function load() {
+  const p = new URLSearchParams(window.location.search);
+  const id = p.get('id');
+
+  if (!id) {
+    // Demo mode — just show envelope
+    document.getElementById('p-load').classList.remove('on');
+    goTo('p0');
+    return;
+  }
+
+  try {
+    const r = await fetch(
+      `${SB}/rest/v1/gifts?id=eq.${id}&select=*`,
+      { headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY } }
+    );
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    if (!d || !d.length) throw new Error();
+
+    G = d[0];
+    buildUI(G);
+
+  } catch (e) {
+    // Still show, just no custom text
+  } finally {
+    document.getElementById('p-load').classList.remove('on');
+    goTo('p0');
+  }
+}
+
+function buildUI(G) {
+  // Customise texts with user's data
+  const name2 = G.nama2 || 'kamu';
+  const name1 = G.nama1 || '';
+
+  // Main card text
+  if (G.b1) {
+    document.getElementById('card-text').innerHTML =
+      G.b1.replace(/\n/g, '<br>');
+  } else {
+    document.getElementById('card-text').innerHTML =
+      `Hay, cuma mau ucapin,<br>semangat ya 😊`;
+  }
+
+  // Cute card text
+  document.getElementById('cute-text').innerHTML =
+    `😍 ni buat si <strong>${name2}</strong> 🍊`;
+
+  // Enggak text
+  document.getElementById('enggak-text').innerHTML =
+    `Yakin enggak? 🥺<br>${name1 ? name1 + ' ikhlas tau...' : 'Aku ikhlas tau...'}`;
+}
+
+load();
+</script>
+</body>
+</html>
