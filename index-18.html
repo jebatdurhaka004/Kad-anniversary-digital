@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GiftKita — Hadiah Digital Malaysia 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{font-family:'Nunito',sans-serif;background:#0a0a0a;color:#fff}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 1.5rem;background:radial-gradient(ellipse 80% 60% at 50% 40%,#1a0a1a,#0a0a0a)}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);padding:.4rem 1.1rem;border-radius:50px;font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:1.5rem;opacity:0;animation:fu .6s .2s forwards}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,12vw,7rem);font-style:italic;font-weight:600;line-height:.9;letter-spacing:-.02em;opacity:0;animation:fu .8s .4s forwards;margin-bottom:1rem}
+.grad{background:linear-gradient(135deg,#FF6B9D,#c44dff,#4d9fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:.88rem;color:rgba(255,255,255,.35);max-width:380px;line-height:1.7;opacity:0;animation:fu .6s .6s forwards;margin-bottom:3rem}
+.hero-cta{background:linear-gradient(135deg,#FF6B9D,#c44dff);color:#fff;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;padding:1rem 2.5rem;border-radius:50px;cursor:pointer;opacity:0;animation:fu .6s .8s forwards;transition:transform .3s}
+.hero-cta:hover{transform:translateY(-3px)}
+.kat-section{padding:5rem 1.5rem;background:#0a0a0a}
+.sec-head{text-align:center;margin-bottom:3rem}
+.sec-label{font-size:.6rem;letter-spacing:.45em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:.7rem}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,7vw,3.5rem);font-style:italic}
+.sec-title span{background:linear-gradient(135deg,#FF6B9D,#c44dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.kat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;max-width:880px;margin:0 auto}
+.kat-card{border-radius:20px;padding:2rem 1.5rem;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);transition:all .35s cubic-bezier(.22,1,.36,1);position:relative}
+.kat-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.05)}
+.kat-icon{font-size:2.5rem;margin-bottom:1rem;display:block;transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.kat-card:hover .kat-icon{transform:scale(1.15)}
+.kat-name{font-family:'Pacifico',cursive;font-size:1.3rem;margin-bottom:.4rem}
+.kat-desc{font-size:.75rem;color:rgba(255,255,255,.35);line-height:1.6;margin-bottom:1.2rem}
+.kat-count{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2)}
+.kat-arrow{position:absolute;bottom:1.2rem;right:1.2rem;font-size:.8rem;color:rgba(255,255,255,.2);transition:all .3s}
+.kat-card:hover .kat-arrow{color:rgba(255,255,255,.6);transform:translateX(4px)}
+.how-section{padding:5rem 1.5rem;background:#0d0d0d}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;max-width:760px;margin:2.5rem auto 0}
+.how-step{text-align:center;padding:1.5rem 1rem}
+.how-ico{font-size:1.8rem;margin-bottom:.7rem}
+.how-title{font-size:.85rem;font-weight:800;margin-bottom:.3rem}
+.how-desc{font-size:.72rem;color:rgba(255,255,255,.3);line-height:1.6}
+footer{text-align:center;padding:2.5rem 1.5rem;border-top:1px solid rgba(255,255,255,.04)}
+.ft-logo{font-family:'Pacifico',cursive;font-size:1.3rem;margin-bottom:.3rem}
+.ft-sub{font-size:.62rem;color:rgba(255,255,255,.18);letter-spacing:.1em}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <p class="hero-badge">🎀 GiftKita · Hadiah Digital Malaysia</p>
+  <h1 class="hero-title">Buat Hadiah<br>Digital Yang<br><span class="grad">Viral</span></h1>
+  <p class="hero-sub">Pilih kategori, pilih template, isi form — dapat link website hadiah dalam masa 10 saat 💕</p>
+  <button class="hero-cta" onclick="document.querySelector('.kat-section').scrollIntoView({behavior:'smooth'})">Buat Hadiah Sekarang →</button>
+</section>
+<section class="kat-section">
+  <div class="sec-head"><p class="sec-label">✦ Pilih Jenis Hadiah ✦</p><h2 class="sec-title">Untuk <span>Siapa</span> Hadiah Ini?</h2></div>
+  <div class="kat-grid" id="kat-grid"></div>
+</section>
+<section class="how-section">
+  <div class="sec-head"><p class="sec-label">✦ Cara Guna ✦</p><h2 class="sec-title">Senang <span>Gila</span></h2></div>
+  <div class="how-grid">
+    <div class="how-step"><div class="how-ico">🎨</div><p class="how-title">Pilih Template</p><p class="how-desc">Pelbagai design cantik ikut kategori</p></div>
+    <div class="how-step"><div class="how-ico">✍️</div><p class="how-title">Isi Form</p><p class="how-desc">Nama, gambar, ucapan dan lagu</p></div>
+    <div class="how-step"><div class="how-ico">🎀</div><p class="how-title">Jana Website</p><p class="how-desc">Dapat link dalam 10 saat</p></div>
+    <div class="how-step"><div class="how-ico">💌</div><p class="how-title">Hantar Link</p><p class="how-desc">Hantar kepada orang istimewa</p></div>
+  </div>
+</section>
+<footer><p class="ft-logo">GiftKita 🎀</p><p class="ft-sub">Birthday · Anniversary · Raya · Kawan</p></footer>
+<script>
+const KATEGORI = [
+  {id:'birthday',nama:'Birthday',icon:'🎂',desc:'Hadiah hari jadi yang istimewa',warna:'#FF6B6B'},
+  {id:'anniversary',nama:'Anniversary',icon:'💕',desc:'Raikan cinta yang indah',warna:'#FF3D7F'},
+  {id:'raya',nama:'Hari Raya',icon:'🌙',desc:'Ucapan raya yang bermakna',warna:'#2d8a4e'},
+  {id:'kawan',nama:'Untuk Kawan',icon:'👫',desc:'Hadiah untuk sahabat tersayang',warna:'#7C3AED'},
+];
+
+const TEMPLATES = {
+  // ══ ANNIVERSARY ══
+  'anniversary-hellokitty':{id:'anniversary-hellokitty',kategori:'anniversary',nama:'Hello Kitty',tagline:'Kawaii & Comel',icon:'🎀',preview_bg:'linear-gradient(135deg,#FFB3D1,#FF6B9D,#FF3D7F)',preview_text:'#fff',gift_page:'gift.html',theme:{pk:'#FF3D7F',p2:'#FF6B9D',pb:'#FFB3D1',bk:'#FFF0F5',dark:false},form_label:{greeting:'Nama kamu & nama dia',surat_title:'Surat Cinta',surat_b1_placeholder:'Cerita permulaan cinta kamu...',surat_b2_placeholder:'Apa yang kamu sayang tentang dia...',surat_b3_placeholder:'Janji dan harapan untuk masa depan...',sticky_title:'Kata-kata untuk dia',sticky_default:'Kamu baik hati dalam cara yang bermakna 🤍\nKamu kuat, walaupun benda jadi susah 💪\nKamu unik — itulah kelebihan kamu ✨\nKamu buat aku rasa disayangi 🌸\nKamu layak untuk semua kebaikan ⭐\nKamu jadi versi terbaik diri sendiri 🎀',tarikh_label:'Tarikh Mula Couple',tarikh_placeholder:'23 April 2021',nama2_label:'Nama dia 💕'}},
+  'anniversary-dark':{id:'anniversary-dark',kategori:'anniversary',nama:'Dark Luxury',tagline:'Elegant & Premium',icon:'✦',preview_bg:'linear-gradient(135deg,#0a0a0a,#1a1208,#c9a96e)',preview_text:'#c9a96e',gift_page:'gift.html',theme:{pk:'#c9a96e',p2:'#e8d5a3',pb:'#a07840',bk:'#0a0a0a',dark:true},form_label:{greeting:'Nama kamu & nama dia',surat_title:'Surat Cinta Premium',surat_b1_placeholder:'Kisah cinta yang indah...',surat_b2_placeholder:'Apa yang istimewa tentang hubungan kamu...',surat_b3_placeholder:'Janji untuk masa depan...',sticky_title:'Kata-kata bermakna',sticky_default:'Kamu adalah sebab aku tersenyum setiap hari ✦\nCinta kita lebih dalam dari kata-kata 💛\nSetiap saat bersamamu adalah hadiah ⭐\nKamu lengkapkan dunia aku 🌙\nSelamanya dan lebih lagi ✨\nAku memilih kamu setiap hari 💫',tarikh_label:'Tarikh Mula Bersama',tarikh_placeholder:'23 April 2021',nama2_label:'Nama dia 💛'}},
+  'anniversary-romantic':{id:'anniversary-romantic',kategori:'anniversary',nama:'Romantic Rose',tagline:'Merah & Penuh Cinta',icon:'🌹',preview_bg:'linear-gradient(135deg,#2d0a0a,#6b1a1a,#c0392b)',preview_text:'#fff',gift_page:'gift.html',theme:{pk:'#c0392b',p2:'#e74c3c',pb:'#f1948a',bk:'#fff5f5',dark:false},form_label:{greeting:'Nama kamu & nama dia',surat_title:'Surat Cinta',surat_b1_placeholder:'Kenangan indah pertama kamu bersama...',surat_b2_placeholder:'Betapa kamu menyayangi dia...',surat_b3_placeholder:'Impian kamu berdua...',sticky_title:'Kata-kata dari hati',sticky_default:'Kamu adalah cinta terhebat aku 🌹\nBersama kamu dunia lebih indah ❤️\nSetiap hari aku bersyukur ada kamu 💕\nCinta ini tak akan padam 🔥\nKamu rumah aku pulang 🏡\nSelamanya milik kamu 💍',tarikh_label:'Tarikh Mula Bersama',tarikh_placeholder:'23 April 2021',nama2_label:'Nama dia 🌹'}},
+  'anniversary-pixel':{id:'anniversary-pixel',kategori:'anniversary',nama:'Pixel Love',tagline:'Game Interactive 🎮',icon:'🕹️',preview_bg:'linear-gradient(135deg,#1a0008,#e8003d,#ff6b8a)',preview_text:'#fff',gift_page:'gift-pixel.html',theme:{pk:'#e8003d',p2:'#ff1a54',pb:'#ff6b8a',bk:'#fff5f0',pixel:true},form_label:{greeting:'Nama kamu & nama dia',surat_title:'Surat Cinta',surat_b1_placeholder:'Cerita permulaan cinta kamu...',surat_b2_placeholder:'Apa yang kamu sayang tentang dia...',surat_b3_placeholder:'Janji dan harapan...',sticky_title:'Kata-kata untuk dia',sticky_default:'Kamu baik hati dalam cara yang bermakna 🤍\nKamu kuat, walaupun benda jadi susah 💪\nKamu unik — itulah kelebihan kamu ✨\nKamu buat aku rasa disayangi 🌸\nKamu layak untuk semua kebaikan ⭐\nKamu jadi versi terbaik diri sendiri 🎀',tarikh_label:'Tarikh Mula Couple',tarikh_placeholder:'23 April 2021',nama2_label:'Nama dia 💕'}},
+  'anniversary-floral':{id:'anniversary-floral',kategori:'anniversary',nama:'Floral Bouquet',tagline:'Cantik & Romantik 🌸',icon:'💐',preview_bg:'linear-gradient(135deg,#f7f0e8,#e8c8c0,#d4a0b0)',preview_text:'#8b4560',gift_page:'gift-floral.html',theme:{pk:'#c9736a',p2:'#d4897a',pb:'#e8b8a8',bk:'#fdfcfa'},form_label:{greeting:'Nama kamu & nama dia',surat_title:'Surat Cinta',surat_b1_placeholder:'Cerita permulaan cinta kamu...',surat_b2_placeholder:'Apa yang kamu sayang tentang dia...',surat_b3_placeholder:'Janji dan harapan...',sticky_title:'Kata-kata untuk dia',sticky_default:'Kamu baik hati dalam cara yang bermakna 🤍\nKamu kuat, walaupun benda jadi susah 💪\nKamu unik — itulah kelebihan kamu ✨\nKamu buat aku rasa disayangi 🌸\nKamu layak untuk semua kebaikan ⭐\nKamu jadi versi terbaik diri sendiri 🎀',tarikh_label:'Tarikh Mula Couple',tarikh_placeholder:'23 April 2021',nama2_label:'Nama dia 💕'}},
+
+  // ══ BIRTHDAY ══
+  'birthday-confetti':{id:'birthday-confetti',kategori:'birthday',nama:'Confetti Party',tagline:'Fun & Colorful',icon:'🎉',preview_bg:'linear-gradient(135deg,#FF6B6B,#FFE66D,#4ECDC4)',preview_text:'#fff',gift_page:'gift.html',theme:{pk:'#FF6B6B',p2:'#FF8E8E',pb:'#FFB3B3',bk:'#FFF5F5',dark:false},form_label:{greeting:'Kepada siapa hadiah ni?',surat_title:'Ucapan Birthday',surat_b1_placeholder:'Tulis ucapan birthday yang bermakna...',surat_b2_placeholder:'Apa yang kau sayang tentang dia...',surat_b3_placeholder:'Doa dan harapan untuk dia...',sticky_title:'Nota Kecil',sticky_default:'Semoga panjang umur dan murah rezeki 🎂\nMakin cantik/ensem makin hari 💕\nSemoga impian kau tercapai ✨\nKau layak untuk semua yang terbaik 🌟\nHappy Birthday! Enjoy your day 🎉\nSayang kau banyak-banyak 🫶',tarikh_label:'Tarikh Birthday',tarikh_placeholder:'15 Mac 2000',nama2_label:'Nama orang yang bertuah 🎂'}},
+  'birthday-pastel':{id:'birthday-pastel',kategori:'birthday',nama:'Pastel Dream',tagline:'Soft & Sweet',icon:'🎀',preview_bg:'linear-gradient(135deg,#FFECD2,#FCB69F,#FF9A9E)',preview_text:'#5a2040',gift_page:'gift.html',theme:{pk:'#FF9A9E',p2:'#FECFEF',pb:'#FFF0F5',bk:'#FFF9FC',dark:false},form_label:{greeting:'Kepada siapa hadiah ni?',surat_title:'Ucapan Birthday',surat_b1_placeholder:'Tulis ucapan birthday yang comel...',surat_b2_placeholder:'Kenangan indah bersama dia...',surat_b3_placeholder:'Wish yang paling ikhlas...',sticky_title:'Kata-kata manis',sticky_default:'Kau adalah cahaya dalam hidup aku 🌟\nSemoga hari kau penuh kegembiraan 🎉\nKau makin cantik/ensem setiap tahun ✨\nDoa aku sentiasa untuk kau 🙏\nHappy Birthday gorgeous! 💕\nSayang kau selalu 🎀',tarikh_label:'Tarikh Birthday',tarikh_placeholder:'15 Mac 2000',nama2_label:'Nama orang istimewa 🎀'}},
+  'birthday-golden':{id:'birthday-golden',kategori:'birthday',nama:'Golden Birthday',tagline:'Elegant & Special',icon:'👑',preview_bg:'linear-gradient(135deg,#0a0a0a,#1a1208,#c9a96e)',preview_text:'#c9a96e',gift_page:'gift.html',theme:{pk:'#c9a96e',p2:'#e8d5a3',pb:'#a07840',bk:'#0a0a0a',dark:true},form_label:{greeting:'Kepada siapa hadiah istimewa ni?',surat_title:'Ucapan Birthday Premium',surat_b1_placeholder:'Tulis ucapan yang bermakna...',surat_b2_placeholder:'Apa yang special tentang dia...',surat_b3_placeholder:'Kata-kata penutup...',sticky_title:'Kata-kata bermakna',sticky_default:'Kau adalah insan yang luar biasa 👑\nSetiap hari bersamamu adalah hadiah ✨\nSemoga tahun ini penuh keberkatan 🌟\nKau layak untuk semua kebaikan dunia 💛\nHappy Birthday, legend! 🎂\nTerus bersinar dalam apa jua keadaan ⭐',tarikh_label:'Tarikh Birthday',tarikh_placeholder:'15 Mac 2000',nama2_label:'Nama si legend 👑'}},
+  'birthday-pixel':{id:'birthday-pixel',kategori:'birthday',nama:'Pixel Party',tagline:'Game Interactive 🎮',icon:'🕹️',preview_bg:'linear-gradient(135deg,#1a0d00,#ff6b00,#ffb347)',preview_text:'#fff',gift_page:'gift-pixel.html',theme:{pk:'#ff6b00',p2:'#ff8c00',pb:'#ffb347',bk:'#fff8f0',pixel:true},form_label:{greeting:'Kepada siapa hadiah ni?',surat_title:'Ucapan Birthday',surat_b1_placeholder:'Tulis ucapan birthday...',surat_b2_placeholder:'Apa yang kau sayang tentang dia...',surat_b3_placeholder:'Doa dan harapan...',sticky_title:'Nota Kecil',sticky_default:'Semoga panjang umur 🎂\nMakin cantik/ensem 💕\nSemoga impian tercapai ✨\nKau layak yang terbaik 🌟\nHappy Birthday! 🎉\nSayang kau banyak 🫶',tarikh_label:'Tarikh Birthday',tarikh_placeholder:'15 Mac 2000',nama2_label:'Nama orang bertuah 🎂'}},
+  'birthday-floral':{id:'birthday-floral',kategori:'birthday',nama:'Floral Birthday',tagline:'Cantik & Meriah 🌸',icon:'💐',preview_bg:'linear-gradient(135deg,#fdf0e8,#f0d0c0,#e8b8a8)',preview_text:'#8b4560',gift_page:'gift-floral.html',theme:{pk:'#c9736a',p2:'#d4897a',pb:'#e8b8a8',bk:'#fdfcfa'},form_label:{greeting:'Kepada siapa hadiah ni?',surat_title:'Ucapan Birthday',surat_b1_placeholder:'Tulis ucapan birthday yang bermakna...',surat_b2_placeholder:'Apa yang kau sayang tentang dia...',surat_b3_placeholder:'Doa dan harapan...',sticky_title:'Nota Kecil',sticky_default:'Semoga panjang umur 🎂\nMakin cantik/ensem 💕\nSemoga impian tercapai ✨\nKau layak yang terbaik 🌟\nHappy Birthday! 🎉\nSayang kau banyak 🫶',tarikh_label:'Tarikh Birthday',tarikh_placeholder:'15 Mac 2000',nama2_label:'Nama orang bertuah 🎂'}},
+  'birthday-cute':{id:'birthday-cute',kategori:'birthday',nama:'Cute Card',tagline:'Comel & Interactive 🥺',icon:'🥺',preview_bg:'linear-gradient(135deg,#e8c9a8,#d4b090,#c49878)',preview_text:'#5a3010',gift_page:'gift-cute.html',theme:{pk:'#c49878',p2:'#d4a888',pb:'#e8c9a8',bk:'#e8c9a8'},form_label:{greeting:'Kepada siapa hadiah ni?',surat_title:'Teks Ucapan',surat_b1_placeholder:'Tulis ucapan comel untuk dia...',surat_b2_placeholder:'',surat_b3_placeholder:'',sticky_title:'',sticky_default:'',tarikh_label:'Tarikh Birthday',tarikh_placeholder:'15 Mac 2000',nama2_label:'Nama dia 🥺'}},
+
+  // ══ RAYA ══
+  'raya-emas':{id:'raya-emas',kategori:'raya',nama:'Raya Emas',tagline:'Mewah & Berkat',icon:'🌙',preview_bg:'linear-gradient(135deg,#0d1f0d,#1a3a1a,#c9a96e)',preview_text:'#c9a96e',gift_page:'gift.html',theme:{pk:'#c9a96e',p2:'#e8d5a3',pb:'#a07840',bk:'#0d1a0d',dark:true},form_label:{greeting:'Kepada siapa ucapan raya ni?',surat_title:'Ucapan Hari Raya',surat_b1_placeholder:'Ucapan Selamat Hari Raya...',surat_b2_placeholder:'Doa dan harapan di hari mulia ini...',surat_b3_placeholder:'Permohonan maaf dan penutup...',sticky_title:'Doa & Ucapan Raya',sticky_default:'Selamat Hari Raya Aidilfitri 🌙\nMaaf Zahir dan Batin 🙏\nSemoga tahun ini lebih berkat ✨\nTaqaballahu Minna Wa Minkum 🌟\nSemoga dimurahkan rezeki 💛\nMoga ukhuwah kita kekal abadi 🤝',tarikh_label:'Tarikh Raya',tarikh_placeholder:'1 Syawal 1446H',nama2_label:'Nama penerima 🌙'}},
+  'raya-hijau':{id:'raya-hijau',kategori:'raya',nama:'Raya Hijau',tagline:'Segar & Meriah',icon:'🌿',preview_bg:'linear-gradient(135deg,#064e3b,#065f46,#34d399)',preview_text:'#fff',gift_page:'gift.html',theme:{pk:'#059669',p2:'#34d399',pb:'#a7f3d0',bk:'#f0fdf4',dark:false},form_label:{greeting:'Kepada siapa ucapan raya ni?',surat_title:'Ucapan Hari Raya',surat_b1_placeholder:'Ucapan raya yang meriah...',surat_b2_placeholder:'Kenangan indah hari raya bersama...',surat_b3_placeholder:'Doa dan harapan...',sticky_title:'Ucapan Raya',sticky_default:'Selamat Hari Raya! 🌿\nMaaf Zahir Batin 🙏\nSemoga rezeki melimpah ruah 💚\nMoga puasa kita diterima Allah ✨\nSemoga dikelilingi orang tersayang 🌟\nEid Mubarak! 🎊',tarikh_label:'Tarikh Raya',tarikh_placeholder:'1 Syawal 1446H',nama2_label:'Nama penerima 🌿'}},
+  'raya-pixel':{id:'raya-pixel',kategori:'raya',nama:'Pixel Raya',tagline:'Game Interactive 🎮',icon:'🕹️',preview_bg:'linear-gradient(135deg,#0a1a0a,#1a5c38,#c9a96e)',preview_text:'#c9a96e',gift_page:'gift-pixel.html',theme:{pk:'#1a7a3a',p2:'#2ea855',pb:'#7dd4a0',bk:'#f0fdf4',pixel:true},form_label:{greeting:'Kepada siapa ucapan raya?',surat_title:'Ucapan Hari Raya',surat_b1_placeholder:'Ucapan Selamat Hari Raya...',surat_b2_placeholder:'Doa dan harapan...',surat_b3_placeholder:'Permohonan maaf...',sticky_title:'Doa & Ucapan Raya',sticky_default:'Selamat Hari Raya 🌙\nMaaf Zahir Batin 🙏\nSemoga lebih berkat ✨\nTaqaballahu Minna 🌟\nDimurahkan rezeki 💛\nUkhuwah kekal abadi 🤝',tarikh_label:'Tarikh Raya',tarikh_placeholder:'1 Syawal 1446H',nama2_label:'Nama penerima 🌙'}},
+  'raya-floral':{id:'raya-floral',kategori:'raya',nama:'Floral Raya',tagline:'Cantik & Meriah 🌸',icon:'💐',preview_bg:'linear-gradient(135deg,#f0f8f0,#d0e8d0,#a8d8a8)',preview_text:'#2d5a2d',gift_page:'gift-floral.html',theme:{pk:'#4a8a4a',p2:'#5a9a5a',pb:'#a8d8a8',bk:'#fdfcfa'},form_label:{greeting:'Kepada siapa ucapan raya?',surat_title:'Ucapan Hari Raya',surat_b1_placeholder:'Ucapan Selamat Hari Raya...',surat_b2_placeholder:'Doa dan harapan...',surat_b3_placeholder:'Permohonan maaf...',sticky_title:'Ucapan Raya',sticky_default:'Selamat Hari Raya 🌙\nMaaf Zahir Batin 🙏\nSemoga lebih berkat ✨\nTaqaballahu Minna 🌟\nDimurahkan rezeki 💛\nUkhuwah kekal abadi 🤝',tarikh_label:'Tarikh Raya',tarikh_placeholder:'1 Syawal 1446H',nama2_label:'Nama penerima 🌙'}},
+  'raya-cute':{id:'raya-cute',kategori:'raya',nama:'Cute Raya',tagline:'Comel & Interactive 🥺',icon:'🥺',preview_bg:'linear-gradient(135deg,#e8c9a8,#d4b090,#c49878)',preview_text:'#5a3010',gift_page:'gift-cute.html',theme:{pk:'#c49878',p2:'#d4a888',pb:'#e8c9a8',bk:'#e8c9a8'},form_label:{greeting:'Kepada siapa ucapan raya?',surat_title:'Ucapan Raya',surat_b1_placeholder:'Tulis ucapan raya yang comel...',surat_b2_placeholder:'',surat_b3_placeholder:'',sticky_title:'',sticky_default:'',tarikh_label:'Tarikh Raya',tarikh_placeholder:'1 Syawal 1446H',nama2_label:'Nama penerima 🥺'}},
+
+  // ══ KAWAN ══
+  'kawan-bestfriend':{id:'kawan-bestfriend',kategori:'kawan',nama:'Best Friend',tagline:'BFF Forever',icon:'👯',preview_bg:'linear-gradient(135deg,#7C3AED,#A78BFA,#DDD6FE)',preview_text:'#fff',gift_page:'gift.html',theme:{pk:'#7C3AED',p2:'#A78BFA',pb:'#DDD6FE',bk:'#F5F3FF',dark:false},form_label:{greeting:'Untuk kawan yang mana?',surat_title:'Pesan untuk Kawan',surat_b1_placeholder:'Kenangan indah bersama kawan ni...',surat_b2_placeholder:'Apa yang kau appreciate tentang dia...',surat_b3_placeholder:'Harapan untuk persahabatan kamu...',sticky_title:'Kata-kata untuk kawan baik',sticky_default:'Kau adalah kawan terbaik yang aku ada 👯\nTerima kasih selalu ada masa aku susah 🤝\nKau buat hidup aku lebih seronok 😂\nSayang kau sebagai kawan aku 💜\nSemoga persahabatan kita kekal lama ✨\nKau tak ternilai dalam hidup aku 🌟',tarikh_label:'Tarikh Kenali',tarikh_placeholder:'Contoh: 2018',nama2_label:'Nama kawan kau 👯'}},
+  'kawan-pixel':{id:'kawan-pixel',kategori:'kawan',nama:'Pixel Friends',tagline:'Game Interactive 🎮',icon:'🕹️',preview_bg:'linear-gradient(135deg,#0a0a2e,#3730a3,#818cf8)',preview_text:'#fff',gift_page:'gift-pixel.html',theme:{pk:'#4338ca',p2:'#6366f1',pb:'#a5b4fc',bk:'#eef2ff',pixel:true},form_label:{greeting:'Untuk kawan yang mana?',surat_title:'Pesan untuk Kawan',surat_b1_placeholder:'Kenangan bersama kawan ni...',surat_b2_placeholder:'Apa yang kau appreciate...',surat_b3_placeholder:'Harapan untuk persahabatan...',sticky_title:'Kata-kata untuk kawan',sticky_default:'Kawan terbaik yang aku ada 👯\nSelalu ada masa aku susah 🤝\nBuat hidup lebih seronok 😂\nSayang kau sebagai kawan 💜\nPersahabatan kekal lama ✨\nKau tak ternilai 🌟',tarikh_label:'Tahun Kenal',tarikh_placeholder:'Contoh: 2018',nama2_label:'Nama kawan kau 👯'}},
+  'kawan-floral':{id:'kawan-floral',kategori:'kawan',nama:'Floral Kawan',tagline:'Cantik & Bermakna 🌸',icon:'💐',preview_bg:'linear-gradient(135deg,#fdf0f8,#f0d0e8,#e0b0d0)',preview_text:'#6b2060',gift_page:'gift-floral.html',theme:{pk:'#9a4a8a',p2:'#aa5a9a',pb:'#e0b0d0',bk:'#fdfcfa'},form_label:{greeting:'Untuk kawan yang mana?',surat_title:'Pesan untuk Kawan',surat_b1_placeholder:'Kenangan indah bersama kawan ni...',surat_b2_placeholder:'Apa yang kau appreciate tentang dia...',surat_b3_placeholder:'Harapan untuk persahabatan kamu...',sticky_title:'Kata-kata untuk kawan',sticky_default:'Kau adalah kawan terbaik 👯\nTerima kasih selalu ada 🤝\nKau buat hidup lebih seronok 😂\nSayang kau sebagai kawan 💜\nPersahabatan kekal lama ✨\nKau tak ternilai 🌟',tarikh_label:'Tahun Kenal',tarikh_placeholder:'Contoh: 2018',nama2_label:'Nama kawan kau 👯'}},
+  'kawan-cute':{id:'kawan-cute',kategori:'kawan',nama:'Cute Card',tagline:'Comel & Interactive 🥺',icon:'🥺',preview_bg:'linear-gradient(135deg,#e8c9a8,#d4b090,#c49878)',preview_text:'#5a3010',gift_page:'gift-cute.html',theme:{pk:'#c49878',p2:'#d4a888',pb:'#e8c9a8',bk:'#e8c9a8'},form_label:{greeting:'Untuk kawan yang mana?',surat_title:'Teks Ucapan',surat_b1_placeholder:'Tulis ucapan comel untuk dia...',surat_b2_placeholder:'',surat_b3_placeholder:'',sticky_title:'',sticky_default:'',tarikh_label:'Tahun Kenal',tarikh_placeholder:'Contoh: 2018',nama2_label:'Nama kawan kau 🥺'}},
+};
+
+function getTemplateById(id){return TEMPLATES[id]}
+function getTemplatesByKategori(kat){return Object.values(TEMPLATES).filter(t=>t.kategori===kat)}
+function getKategoriById(id){return KATEGORI.find(k=>k.id===id)}
+
+const g=document.getElementById('kat-grid');
+KATEGORI.forEach(k=>{
+  const count=getTemplatesByKategori(k.id).length;
+  const d=document.createElement('div');d.className='kat-card';
+  d.innerHTML=`<span class="kat-icon">${k.icon}</span><h3 class="kat-name" style="color:${k.warna}">${k.nama}</h3><p class="kat-desc">${k.desc}</p><p class="kat-count">${count} template</p><span class="kat-arrow">→</span>`;
+  d.addEventListener('click',()=>window.location.href=`templates.html?kat=${k.id}`);
+  d.addEventListener('mouseenter',()=>{d.style.borderColor=k.warna+'44';d.style.boxShadow=`0 20px 50px ${k.warna}22`});
+  d.addEventListener('mouseleave',()=>{d.style.borderColor='';d.style.boxShadow=''});
+  g.appendChild(d);
+});
+</script>
+</body>
+</html>
