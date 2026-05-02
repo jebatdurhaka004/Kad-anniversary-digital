@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GiftKita — Cute Card 🥺</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:100px}
+
+/* TOPBAR */
+.topbar{background:rgba(10,10,10,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 1.2rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.tb-back{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.35);cursor:pointer;background:none;border:none;display:flex;align-items:center;gap:.3rem}
+.tb-back:hover{color:#fff}
+.tb-title{font-size:.88rem;font-weight:900}
+.tb-tmpl{font-size:1.2rem}
+
+/* PROGRESS */
+.progress-bar{background:#111;border-bottom:1px solid rgba(255,255,255,.05);padding:.8rem 1.2rem;display:flex;align-items:center;gap:.4rem}
+.pb-step{display:flex;align-items:center;gap:.4rem;flex:1}
+.pb-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;border:2px solid rgba(255,255,255,.12);color:rgba(255,255,255,.3);flex-shrink:0;transition:all .3s}
+.pb-dot.done{background:#22c55e;border-color:#22c55e;color:#fff}
+.pb-dot.active{background:linear-gradient(135deg,#f857a6,#a855f7);border-color:transparent;color:#fff}
+.pb-line{flex:1;height:1px;background:rgba(255,255,255,.08)}
+
+/* STEPS */
+.step{display:none;padding:1.5rem 1.2rem;flex-direction:column;gap:1.2rem;animation:fadeIn .3s ease}
+.step.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.step-hd{display:flex;flex-direction:column;gap:.3rem}
+.step-title{font-size:1.1rem;font-weight:900}
+.step-sub{font-size:.75rem;color:rgba(255,255,255,.35)}
+
+/* FIELDS */
+.field{display:flex;flex-direction:column;gap:.45rem}
+.field label{font-size:.68rem;font-weight:800;color:rgba(255,255,255,.45);letter-spacing:.08em;text-transform:uppercase}
+.field input,.field textarea{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:.85rem 1rem;color:#fff;font-family:'Nunito',sans-serif;font-size:.92rem;outline:none;transition:border-color .2s;width:100%}
+.field input:focus,.field textarea:focus{border-color:rgba(248,87,166,.5);background:rgba(255,255,255,.08)}
+.field textarea{resize:none;line-height:1.65}
+::placeholder{color:rgba(255,255,255,.2)}
+.field-hint{font-size:.68rem;color:rgba(255,255,255,.25);margin-top:.1rem}
+.char-count{font-size:.65rem;color:rgba(255,255,255,.2);text-align:right}
+
+/* PHOTO UPLOAD */
+.photo-section-title{font-size:.68rem;font-weight:800;color:rgba(255,255,255,.45);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.photo-slot{aspect-ratio:1;border-radius:12px;border:1.5px dashed rgba(255,255,255,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;background:rgba(255,255,255,.03);transition:all .2s;gap:.3rem}
+.photo-slot:hover{border-color:rgba(248,87,166,.4);background:rgba(248,87,166,.04)}
+.photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:10px}
+.photo-slot .slot-ico{font-size:1.3rem;opacity:.3}
+.photo-slot .slot-txt{font-size:.6rem;color:rgba(255,255,255,.2);font-weight:700}
+.photo-slot input{display:none}
+.photo-slot .rm-btn{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.75);border:none;border-radius:50%;width:22px;height:22px;color:#fff;cursor:pointer;font-size:.65rem;display:none;align-items:center;justify-content:center;z-index:2}
+.photo-slot:hover .rm-btn.show{display:flex}
+
+/* VIDEO */
+.vid-toggle{display:flex;background:rgba(255,255,255,.05);border-radius:10px;padding:.25rem;margin-bottom:.8rem;border:1px solid rgba(255,255,255,.08)}
+.vid-tab{flex:1;padding:.45rem;border-radius:8px;border:none;background:transparent;color:rgba(255,255,255,.35);font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s}
+.vid-tab.on{background:rgba(255,255,255,.1);color:#fff}
+.vid-section{display:none}
+.vid-section.on{display:block}
+.vid-preview-box{margin-top:.7rem;border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:#111;display:none}
+.vid-preview-box.show{display:block}
+.vid-preview-box iframe,.vid-preview-box video{width:100%;height:100%;border:none;display:block}
+.vid-upload-btn{width:100%;background:rgba(255,255,255,.05);border:1.5px dashed rgba(255,255,255,.15);border-radius:12px;padding:.9rem;color:rgba(255,255,255,.4);font-family:'Nunito',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.vid-upload-btn:hover{border-color:rgba(248,87,166,.4);color:rgba(255,255,255,.7)}
+
+/* NAV BUTTONS */
+.nav-fixed{position:fixed;bottom:0;left:0;right:0;padding:.9rem 1.2rem;background:rgba(10,10,10,.96);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.06);display:flex;gap:.6rem;z-index:50}
+.btn-back{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;padding:.78rem 1.2rem;border-radius:12px;cursor:pointer;flex-shrink:0}
+.btn-next{flex:1;background:linear-gradient(135deg,#f857a6,#a855f7);border:none;color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:.88rem;padding:.85rem;border-radius:12px;cursor:pointer;transition:opacity .2s;box-shadow:0 4px 20px rgba(248,87,166,.3)}
+.btn-next:active{opacity:.85}
+.btn-next:disabled{opacity:.4;pointer-events:none}
+
+/* SUMMARY CARD */
+.summary-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.2rem}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.05);gap:.8rem}
+.sum-row:last-child{border-bottom:none}
+.sum-key{font-size:.7rem;color:rgba(255,255,255,.35);flex-shrink:0;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.sum-val{font-size:.82rem;font-weight:700;text-align:right;word-break:break-word}
+.sum-photos{display:flex;gap:.3rem;flex-wrap:wrap;justify-content:flex-end}
+.sum-photo{width:40px;height:40px;border-radius:6px;object-fit:cover}
+
+/* TOAST */
+.toast{position:fixed;top:1.2rem;left:50%;transform:translateX(-50%) translateY(-30px);background:#22c55e;color:#fff;padding:.5rem 1.4rem;border-radius:50px;font-size:.78rem;font-weight:700;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:#ef4444}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="tb-back" onclick="goBack()">← Balik</button>
+  <span class="tb-title">Cute Card</span>
+  <span class="tb-tmpl">🥺</span>
+</div>
+
+<div class="progress-bar" id="progress-bar"></div>
+
+<!-- STEP 1: Nama -->
+<div class="step active" id="s1">
+  <div class="step-hd">
+    <p class="step-title">Siapa yang bertuah? 👤</p>
+    <p class="step-sub">Masukkan nama untuk kad comel ini</p>
+  </div>
+  <div class="field">
+    <label>Nama Kamu (Penghantar)</label>
+    <input type="text" id="nama1" placeholder="Nama kamu..." maxlength="40" oninput="updateChar(this,'c1')">
+    <span class="char-count" id="c1">0/40</span>
+  </div>
+  <div class="field">
+    <label>Nama Dia (Penerima) 🥺</label>
+    <input type="text" id="nama2" placeholder="Nama dia..." maxlength="40" oninput="updateChar(this,'c2')">
+    <span class="char-count" id="c2">0/40</span>
+  </div>
+</div>
+
+<!-- STEP 2: Ucapan -->
+<div class="step" id="s2">
+  <div class="step-hd">
+    <p class="step-title">Tulis ucapan comel ✍️</p>
+    <p class="step-sub">Ni yang akan tertulis dalam kad. Jadikan ia bermakna!</p>
+  </div>
+  <div class="field">
+    <label>Ucapan untuk dia</label>
+    <textarea id="ucapan" rows="5" placeholder="Contoh: Hay, cuma mau ucapin, semangat ya! Kau boleh buat semua benda yang kau nak. Aku percaya kau 💪" maxlength="300" oninput="updateChar(this,'c3')"></textarea>
+    <span class="char-count" id="c3">0/300</span>
+    <p class="field-hint">💡 Tips: Tulis macam kau cakap dengan dia. Lebih personal = lebih touching!</p>
+  </div>
+</div>
+
+<!-- STEP 3: Gambar & Video -->
+<div class="step" id="s3">
+  <div class="step-hd">
+    <p class="step-title">Gambar & Video 📸</p>
+    <p class="step-sub">Upload gambar kenangan (max 3) dan video optional</p>
+  </div>
+
+  <div>
+    <p class="photo-section-title">📷 Gambar (sehingga 3)</p>
+    <div class="photo-grid" id="photo-grid"></div>
+    <p class="field-hint" style="margin-top:.5rem">💡 Gambar akan auto-compress untuk loading laju</p>
+  </div>
+
+  <div>
+    <p class="photo-section-title" style="margin-bottom:.6rem">🎬 Video (pilihan)</p>
+    <div class="vid-toggle">
+      <button class="vid-tab on" onclick="switchVid('yt',this)">▶️ YouTube</button>
+      <button class="vid-tab" onclick="switchVid('upload',this)">📤 Upload</button>
+    </div>
+    <div class="vid-section on" id="vs-yt">
+      <div class="field">
+        <input type="text" id="yt-url" placeholder="https://youtube.com/watch?v=..." oninput="handleYt(this.value)">
+      </div>
+      <div class="vid-preview-box" id="yt-preview"><iframe allowfullscreen></iframe></div>
+    </div>
+    <div class="vid-section" id="vs-upload">
+      <button class="vid-upload-btn" onclick="document.getElementById('vid-file').click()">
+        📤 Pilih Video dari Galeri
+      </button>
+      <input type="file" id="vid-file" accept="video/*" style="display:none" onchange="handleVidFile(this)">
+      <div class="vid-preview-box" id="vid-upload-preview"><video controls playsinline></video></div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 4: Semak -->
+<div class="step" id="s4">
+  <div class="step-hd">
+    <p class="step-title">Semak sebelum preview 👀</p>
+    <p class="step-sub">Pastikan semua details betul sebelum proceed</p>
+  </div>
+  <div class="summary-card" id="summary-card">
+    <!-- Filled by JS -->
+  </div>
+  <div style="background:rgba(248,87,166,.08);border:1px solid rgba(248,87,166,.2);border-radius:12px;padding:1rem;font-size:.8rem;color:rgba(255,255,255,.7);line-height:1.6">
+    ℹ️ Selepas ini kau akan dapat <strong>preview percuma</strong> kad kau. Bayar hanya bila dah puas hati!
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-fixed">
+  <button class="btn-back" id="btn-back" style="display:none" onclick="prevStep()">← Balik</button>
+  <button class="btn-next" id="btn-next" onclick="nextStep()">Seterusnya →</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SB = 'https://lejpuajafuenlfvlovfg.supabase.co';
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlanB1YWphZnVlbmxmdmxvdmZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjYyNTAsImV4cCI6MjA5MjcwMjI1MH0.rwABj8DyW3dijUr5TurtMoemZgG2b9LgSHSicUMxMmc';
+const TEMPLATE_ID = 'cute-v1';
+const STEPS = 4;
+
+let cur = 1;
+let photos = [null, null, null];
+let vidUrl = null;
+let vidData = null;
+
+// ── INIT ──
+function init() {
+  buildProgress();
+  buildPhotos();
+}
+
+function buildProgress() {
+  const bar = document.getElementById('progress-bar');
+  bar.innerHTML = '';
+  for (let i = 1; i <= STEPS; i++) {
+    if (i > 1) {
+      const line = document.createElement('div');
+      line.className = 'pb-line';
+      bar.appendChild(line);
+    }
+    const dot = document.createElement('div');
+    dot.className = 'pb-dot' + (i === 1 ? ' active' : '');
+    dot.id = 'pd' + i;
+    dot.textContent = i;
+    bar.appendChild(dot);
+  }
+}
+
+function buildPhotos() {
+  const grid = document.getElementById('photo-grid');
+  for (let i = 0; i < 3; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'photo-slot';
+    slot.id = 'ps' + i;
+    slot.innerHTML = `
+      <span class="slot-ico">📷</span>
+      <span class="slot-txt">Tambah</span>
+      <input type="file" accept="image/*" id="pf${i}">
+      <button class="rm-btn" id="rm${i}" onclick="removePhoto(event,${i})">✕</button>`;
+    slot.addEventListener('click', e => {
+      if (e.target.tagName !== 'BUTTON') document.getElementById('pf' + i).click();
+    });
+    document.getElementById('pf' + i).addEventListener('change', function () { handlePhoto(this, i); });
+    grid.appendChild(slot);
+  }
+}
+
+// ── STEPS ──
+function goStep(n) {
+  document.getElementById('s' + cur).classList.remove('active');
+  document.getElementById('s' + n).classList.add('active');
+
+  for (let i = 1; i <= STEPS; i++) {
+    const d = document.getElementById('pd' + i);
+    if (i < n) d.className = 'pb-dot done';
+    else if (i === n) d.className = 'pb-dot active';
+    else d.className = 'pb-dot';
+    d.textContent = i < n ? '✓' : i;
+  }
+
+  cur = n;
+  document.getElementById('btn-back').style.display = n > 1 ? 'block' : 'none';
+  document.getElementById('btn-next').textContent = n >= STEPS ? 'Proceed ke Preview →' : 'Seterusnya →';
+  window.scrollTo(0, 0);
+}
+
+function nextStep() {
+  if (!validate()) return;
+  if (cur >= STEPS) { saveAndPreview(); return; }
+  if (cur === STEPS - 1) buildSummary();
+  goStep(cur + 1);
+}
+
+function prevStep() {
+  if (cur > 1) goStep(cur - 1);
+}
+
+// ── VALIDATION ──
+function validate() {
+  if (cur === 1) {
+    if (!document.getElementById('nama1').value.trim()) { showToast('Masukkan nama kamu!', true); return false; }
+    if (!document.getElementById('nama2').value.trim()) { showToast('Masukkan nama dia!', true); return false; }
+  }
+  if (cur === 2) {
+    if (!document.getElementById('ucapan').value.trim()) { showToast('Tulis ucapan dulu!', true); return false; }
+  }
+  return true;
+}
+
+// ── PHOTO HANDLING ──
+function handlePhoto(inp, idx) {
+  const file = inp.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const max = 700; let w = img.width, h = img.height;
+      if (w > max || h > max) { if (w > h) { h = h * max / w; w = max; } else { w = w * max / h; h = max; } }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const data = canvas.toDataURL('image/jpeg', .7);
+      photos[idx] = data;
+
+      const slot = document.getElementById('ps' + idx);
+      let im = slot.querySelector('img');
+      if (!im) { im = document.createElement('img'); slot.insertBefore(im, slot.querySelector('.rm-btn')); }
+      im.src = data;
+      slot.querySelector('.slot-ico').style.display = 'none';
+      slot.querySelector('.slot-txt').style.display = 'none';
+      document.getElementById('rm' + idx).classList.add('show');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto(e, idx) {
+  e.stopPropagation();
+  photos[idx] = null;
+  const slot = document.getElementById('ps' + idx);
+  const im = slot.querySelector('img');
+  if (im) im.remove();
+  slot.querySelector('.slot-ico').style.display = '';
+  slot.querySelector('.slot-txt').style.display = '';
+  document.getElementById('rm' + idx).classList.remove('show');
+}
+
+// ── VIDEO ──
+function switchVid(type, btn) {
+  document.querySelectorAll('.vid-tab').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.vid-section').forEach(s => s.classList.remove('on'));
+  document.getElementById('vs-' + type).classList.add('on');
+}
+
+function handleYt(val) {
+  const m = val.match(/(?:youtu\.be\/|[?&]v=)([a-zA-Z0-9_-]{11})/);
+  if (m) {
+    vidUrl = val; vidData = null;
+    const prev = document.getElementById('yt-preview');
+    prev.querySelector('iframe').src = 'https://www.youtube.com/embed/' + m[1];
+    prev.classList.add('show');
+  }
+}
+
+function handleVidFile(inp) {
+  const file = inp.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    vidData = e.target.result; vidUrl = null;
+    const prev = document.getElementById('vid-upload-preview');
+    prev.querySelector('video').src = vidData;
+    prev.classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── SUMMARY ──
+function buildSummary() {
+  const n1 = document.getElementById('nama1').value;
+  const n2 = document.getElementById('nama2').value;
+  const uc = document.getElementById('ucapan').value;
+  const p = photos.filter(Boolean);
+
+  document.getElementById('summary-card').innerHTML = `
+    <div class="sum-row"><span class="sum-key">Dari</span><span class="sum-val">${n1}</span></div>
+    <div class="sum-row"><span class="sum-key">Untuk</span><span class="sum-val">${n2}</span></div>
+    <div class="sum-row"><span class="sum-key">Ucapan</span><span class="sum-val" style="font-size:.78rem;line-height:1.5">${uc}</span></div>
+    <div class="sum-row"><span class="sum-key">Gambar</span><span class="sum-val">${p.length > 0 ? `<div class="sum-photos">${p.map(x => `<img class="sum-photo" src="${x}">`).join('')}</div>` : 'Tiada'}</span></div>
+    <div class="sum-row"><span class="sum-key">Video</span><span class="sum-val">${vidUrl || vidData ? '✅ Ada' : 'Tiada'}</span></div>
+    <div class="sum-row"><span class="sum-key">Template</span><span class="sum-val">🥺 Cute Card</span></div>`;
+}
+
+// ── SAVE & PREVIEW ──
+async function saveAndPreview() {
+  const btn = document.getElementById('btn-next');
+  btn.textContent = 'Menyimpan... ⏳';
+  btn.disabled = true;
+
+  try {
+    // Get template price
+    const tr = await fetch(`${SB}/rest/v1/templates?id=eq.${TEMPLATE_ID}&select=harga,gift_path`, {
+      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
+    });
+    const [tmpl] = await tr.json();
+
+    const orderData = {
+      template_id: TEMPLATE_ID,
+      nama1: document.getElementById('nama1').value.trim(),
+      nama2: document.getElementById('nama2').value.trim(),
+      ucapan: document.getElementById('ucapan').value.trim(),
+      photos: photos.filter(Boolean),
+      video_url: vidUrl || null,
+      harga: tmpl?.harga || 5.00,
+      status: 'preview',
+    };
+
+    const r = await fetch(`${SB}/rest/v1/orders`, {
+      method: 'POST',
+      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify(orderData)
+    });
+
+    if (!r.ok) throw new Error(await r.text());
+    const [order] = await r.json();
+
+    // Go to payment page with order ID
+    const base = window.location.href.replace(/templates\/cute\/form\.html.*/, '');
+    window.location.href = `${base}payment.html?id=${order.id}&t=${TEMPLATE_ID}`;
+
+  } catch (e) {
+    showToast('Ralat! Cuba lagi.', true);
+    console.error(e);
+    btn.textContent = 'Proceed ke Preview →';
+    btn.disabled = false;
+  }
+}
+
+// ── UTILS ──
+function updateChar(el, countId) {
+  document.getElementById(countId).textContent = el.value.length + '/' + el.maxLength;
+}
+
+function showToast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' err' : '');
+  setTimeout(() => t.className = 'toast', 2800);
+}
+
+function goBack() {
+  window.location.href = '../../index.html';
+}
+
+init();
+</script>
+</body>
+</html>

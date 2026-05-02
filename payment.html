@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GiftKita — Preview & Bayar 💳</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
+.topbar{background:rgba(10,10,10,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 1.2rem;height:52px;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+.tb-back{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.35);cursor:pointer;background:none;border:none}
+.tb-back:hover{color:#fff}
+.tb-logo{font-family:'Pacifico',cursive;font-size:.95rem;flex:1;text-align:center}
+
+/* STATES */
+#state-loading,#state-preview,#state-paid,#state-error{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 52px);padding:2rem 1.2rem;text-align:center;gap:1.2rem}
+#state-loading.on,#state-preview.on,#state-paid.on,#state-error.on{display:flex}
+.state-ico{font-size:2.8rem;animation:bounce 1.5s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.state-title{font-size:1.2rem;font-weight:900}
+.state-sub{font-size:.82rem;color:rgba(255,255,255,.38);max-width:320px;line-height:1.65}
+
+/* PREVIEW SECTION */
+#state-preview{text-align:left;justify-content:flex-start;padding-top:1.5rem;gap:1.2rem}
+
+.preview-frame{
+  width:100%;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  background:#111;
+  position:relative;
+}
+.preview-label{
+  position:absolute;top:.6rem;left:.6rem;z-index:5;
+  background:rgba(248,87,166,.85);color:#fff;
+  font-size:.55rem;font-weight:900;letter-spacing:.1em;
+  padding:.22rem .7rem;border-radius:50px;text-transform:uppercase;
+}
+.preview-iframe{width:100%;height:65vh;border:none;display:block;pointer-events:none}
+
+/* Order summary */
+.order-box{
+  background:#111;border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:1.3rem;width:100%;
+}
+.ob-title{font-size:.88rem;font-weight:900;margin-bottom:1rem;color:rgba(255,255,255,.7)}
+.ob-row{display:flex;justify-content:space-between;align-items:center;padding:.42rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.ob-row:last-child{border-bottom:none}
+.ob-key{font-size:.72rem;color:rgba(255,255,255,.35);font-weight:700}
+.ob-val{font-size:.82rem;font-weight:700}
+.ob-price{font-size:1.2rem;font-weight:900;color:#f857a6}
+
+/* Payment instructions */
+.pay-box{
+  background:linear-gradient(135deg,rgba(248,87,166,.08),rgba(168,85,247,.08));
+  border:1px solid rgba(248,87,166,.2);
+  border-radius:16px;padding:1.3rem;width:100%;
+}
+.pay-title{font-size:.88rem;font-weight:900;margin-bottom:1rem}
+.pay-step{display:flex;align-items:flex-start;gap:.8rem;padding:.5rem 0}
+.pay-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#f857a6,#a855f7);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:900;flex-shrink:0;margin-top:.1rem}
+.pay-text{font-size:.8rem;line-height:1.55;color:rgba(255,255,255,.7)}
+.pay-text strong{color:#fff}
+.pay-text a{color:#f857a6;text-decoration:none;word-break:break-all}
+
+/* Account info */
+.acc-box{
+  background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15);
+  border-radius:12px;padding:1rem 1.2rem;margin:.5rem 0;
+  display:flex;flex-direction:column;gap:.4rem;
+}
+.acc-row{display:flex;justify-content:space-between;align-items:center}
+.acc-key{font-size:.7rem;color:rgba(255,255,255,.35);font-weight:700}
+.acc-val{font-size:.85rem;font-weight:800;color:#fff}
+.copy-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5);padding:.25rem .6rem;border-radius:6px;font-family:'Nunito',sans-serif;font-size:.62rem;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+
+/* Ref input */
+.ref-section{width:100%}
+.ref-title{font-size:.88rem;font-weight:900;margin-bottom:.8rem}
+.ref-input-wrap{display:flex;gap:.6rem}
+.ref-inp{flex:1;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:.8rem 1rem;color:#fff;font-family:'Nunito',sans-serif;font-size:.88rem;outline:none}
+.ref-inp:focus{border-color:rgba(248,87,166,.5)}
+.ref-btn{background:linear-gradient(135deg,#f857a6,#a855f7);border:none;color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:.8rem;padding:.8rem 1.2rem;border-radius:12px;cursor:pointer;flex-shrink:0;transition:opacity .2s}
+.ref-btn:active{opacity:.85}
+.ref-hint{font-size:.7rem;color:rgba(255,255,255,.3);margin-top:.5rem;line-height:1.5}
+
+/* PAID STATE */
+.gift-link-box{
+  background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);
+  border-radius:16px;padding:1.2rem;width:100%;text-align:center;
+}
+.gift-link{
+  color:#4ade80;font-size:.8rem;word-break:break-all;
+  margin:.5rem 0 1rem;line-height:1.5;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#f857a6,#a855f7);
+  border:none;color:#fff;font-family:'Nunito',sans-serif;
+  font-weight:900;font-size:.88rem;padding:.88rem 2rem;
+  border-radius:12px;cursor:pointer;width:100%;
+  box-shadow:0 4px 20px rgba(248,87,166,.3);
+  transition:opacity .2s;margin-bottom:.6rem;
+}
+.btn-primary:active{opacity:.85}
+.btn-ghost{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.6);font-family:'Nunito',sans-serif;
+  font-weight:700;font-size:.82rem;padding:.82rem 2rem;
+  border-radius:12px;cursor:pointer;width:100%;
+}
+
+/* TOAST */
+.toast{position:fixed;top:1.2rem;left:50%;transform:translateX(-50%) translateY(-30px);background:#22c55e;color:#fff;padding:.5rem 1.4rem;border-radius:50px;font-size:.78rem;font-weight:700;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:#ef4444}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="tb-back" onclick="history.back()">←</button>
+  <span class="tb-logo">GiftKita 🎀</span>
+  <span style="width:40px"></span>
+</div>
+
+<!-- LOADING -->
+<div id="state-loading" class="on">
+  <div class="state-ico">⏳</div>
+  <p class="state-title">Memuatkan Preview...</p>
+  <p class="state-sub">Jap ek, siap dalam sekelip mata!</p>
+</div>
+
+<!-- PREVIEW + PAYMENT -->
+<div id="state-preview">
+
+  <!-- Preview frame -->
+  <div style="width:100%">
+    <p style="font-size:.75rem;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem">👀 Preview Kad Kau</p>
+    <div class="preview-frame">
+      <div class="preview-label">PREVIEW</div>
+      <iframe class="preview-iframe" id="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+    <p style="font-size:.7rem;color:rgba(255,255,255,.25);margin-top:.5rem;text-align:center">Preview mode — sesetengah animasi mungkin berbeza sikit</p>
+  </div>
+
+  <!-- Order summary -->
+  <div class="order-box">
+    <p class="ob-title">📋 Ringkasan Order</p>
+    <div class="ob-row"><span class="ob-key">Template</span><span class="ob-val" id="ob-tmpl">—</span></div>
+    <div class="ob-row"><span class="ob-key">Dari</span><span class="ob-val" id="ob-dari">—</span></div>
+    <div class="ob-row"><span class="ob-key">Untuk</span><span class="ob-val" id="ob-untuk">—</span></div>
+    <div class="ob-row"><span class="ob-key">Order ID</span><span class="ob-val" style="font-size:.7rem;color:rgba(255,255,255,.4)" id="ob-id">—</span></div>
+    <div class="ob-row" style="border-bottom:none;padding-top:.6rem"><span class="ob-key">JUMLAH BAYAR</span><span class="ob-price" id="ob-price">RM —</span></div>
+  </div>
+
+  <!-- Payment instructions -->
+  <div class="pay-box">
+    <p class="pay-title">💳 Cara Bayar</p>
+    <div class="pay-step">
+      <div class="pay-num">1</div>
+      <p class="pay-text">Transfer ke akaun di bawah dengan <strong>jumlah yang tepat</strong></p>
+    </div>
+    <div class="acc-box">
+      <div class="acc-row">
+        <span class="acc-key">Bank</span>
+        <span class="acc-val" id="bank-name">Maybank</span>
+      </div>
+      <div class="acc-row">
+        <span class="acc-key">No. Akaun</span>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <span class="acc-val" id="acc-num">1234567890</span>
+          <button class="copy-btn" onclick="copyAcc()">Copy</button>
+        </div>
+      </div>
+      <div class="acc-row">
+        <span class="acc-key">Nama</span>
+        <span class="acc-val" id="acc-name">GiftKita</span>
+      </div>
+    </div>
+    <div class="pay-step">
+      <div class="pay-num">2</div>
+      <p class="pay-text">Screenshot resit transfer kau</p>
+    </div>
+    <div class="pay-step">
+      <div class="pay-num">3</div>
+      <p class="pay-text">Masukkan <strong>nombor rujukan/ID transaksi</strong> dari resit di bawah dan hantar</p>
+    </div>
+    <div class="pay-step">
+      <div class="pay-num">4</div>
+      <p class="pay-text">Admin akan confirm dalam <strong>masa 15-30 minit</strong>. Link hadiah akan dihantar ke WhatsApp kau!</p>
+    </div>
+  </div>
+
+  <!-- Submit reference -->
+  <div class="ref-section">
+    <p class="ref-title">✅ Dah Bayar? Submit Rujukan</p>
+    <div class="ref-input-wrap">
+      <input class="ref-inp" id="ref-inp" type="text" placeholder="Contoh: TXN123456789...">
+      <button class="ref-btn" onclick="submitRef()">Hantar</button>
+    </div>
+    <p class="ref-hint">Masukkan nombor rujukan/ID transaksi dari resit bank kau. Admin akan verify dan activate link kau.</p>
+  </div>
+
+  <!-- WhatsApp contact -->
+  <div style="width:100%;text-align:center">
+    <p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-bottom:.6rem">Atau hubungi admin terus</p>
+    <button id="wa-btn" onclick="contactWa()" style="background:#25D366;border:none;color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;padding:.78rem 2rem;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem">
+      💬 WhatsApp Admin
+    </button>
+  </div>
+
+</div>
+
+<!-- PAID / ACTIVATED -->
+<div id="state-paid">
+  <div class="state-ico" style="animation:none">🎉</div>
+  <p class="state-title">Bayaran Disahkan!</p>
+  <p class="state-sub">Link hadiah kau dah siap. Hantar kepada orang yang tersayang!</p>
+  <div class="gift-link-box">
+    <p style="font-size:.72rem;color:rgba(255,255,255,.35);font-weight:700;letter-spacing:.08em;text-transform:uppercase">Link Hadiah Kau</p>
+    <p class="gift-link" id="paid-link">—</p>
+    <button class="btn-primary" onclick="copyGiftLink()">📋 Copy Link</button>
+    <button class="btn-ghost" onclick="openGiftLink()">👀 Buka Kad</button>
+  </div>
+</div>
+
+<!-- ERROR -->
+<div id="state-error">
+  <div class="state-ico" style="animation:none">😢</div>
+  <p class="state-title">Order tidak dijumpai</p>
+  <p class="state-sub">Link mungkin sudah tamat tempoh atau tidak sah.</p>
+  <button onclick="window.location.href='index.html'" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;padding:.78rem 2rem;border-radius:12px;cursor:pointer">← Balik ke Katalog</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SB = 'https://lejpuajafuenlfvlovfg.supabase.co';
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlanB1YWphZnVlbmxmdmxvdmZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMjYyNTAsImV4cCI6MjA5MjcwMjI1MH0.rwABj8DyW3dijUr5TurtMoemZgG2b9LgSHSicUMxMmc';
+
+// ⚙️ EDIT MAKLUMAT PEMBAYARAN KAU DI SINI
+const PAYMENT_INFO = {
+  bank: 'Maybank',
+  acc_num: '156057603905',
+  acc_name: 'Muhammad Ilyas',
+  wa_num: '60102575508',
+};
+
+let orderId = null;
+let orderData = null;
+
+function showState(id) {
+  ['state-loading','state-preview','state-paid','state-error'].forEach(s => {
+    document.getElementById(s).classList.remove('on');
+  });
+  document.getElementById(id).classList.add('on');
+}
+
+async function load() {
+  const p = new URLSearchParams(window.location.search);
+  orderId = p.get('id');
+  const tmplId = p.get('t');
+
+  if (!orderId) { showState('state-error'); return; }
+
+  try {
+    // Load order
+    const r = await fetch(`${SB}/rest/v1/orders?id=eq.${orderId}`, {
+      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
+    });
+    const [order] = await r.json();
+    if (!order) { showState('state-error'); return; }
+    orderData = order;
+
+    // If already paid, show paid state
+    if (order.status === 'paid' && order.gift_url) {
+      document.getElementById('paid-link').textContent = order.gift_url;
+      showState('state-paid');
+      return;
+    }
+
+    // Load template info
+    const tr = await fetch(`${SB}/rest/v1/templates?id=eq.${order.template_id}`, {
+      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
+    });
+    const [tmpl] = await tr.json();
+
+    // Fill order summary
+    document.getElementById('ob-tmpl').textContent = (tmpl?.icon || '🎀') + ' ' + (tmpl?.nama || order.template_id);
+    document.getElementById('ob-dari').textContent = order.nama1 || '—';
+    document.getElementById('ob-untuk').textContent = order.nama2 || '—';
+    document.getElementById('ob-id').textContent = orderId.slice(0, 8) + '...';
+    document.getElementById('ob-price').textContent = 'RM ' + parseFloat(order.harga || 5).toFixed(2);
+
+    // Fill payment info
+    document.getElementById('bank-name').textContent = PAYMENT_INFO.bank;
+    document.getElementById('acc-num').textContent = PAYMENT_INFO.acc_num;
+    document.getElementById('acc-name').textContent = PAYMENT_INFO.acc_name;
+
+    // Load preview iframe
+    if (tmpl?.gift_path) {
+      const base = window.location.href.replace(/payment\.html.*/, '');
+      const previewUrl = base + tmpl.gift_path + '?id=' + orderId + '&preview=1';
+      document.getElementById('preview-iframe').src = previewUrl;
+    }
+
+    showState('state-preview');
+
+    // Poll for payment confirmation every 15s
+    startPolling();
+
+  } catch (e) {
+    showState('state-error');
+  }
+}
+
+// ── SUBMIT REFERENCE ──
+async function submitRef() {
+  const ref = document.getElementById('ref-inp').value.trim();
+  if (!ref) { showToast('Masukkan nombor rujukan!', true); return; }
+
+  try {
+    await fetch(`${SB}/rest/v1/orders?id=eq.${orderId}`, {
+      method: 'PATCH',
+      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ toyyibpay_ref: ref, status: 'pending_confirm' })
+    });
+
+    showToast('✅ Rujukan dihantar! Admin akan confirm dalam 15-30 minit');
+
+    // Also send WhatsApp notification
+    const msg = encodeURIComponent(
+      `🎀 *GiftKita - Bayaran Baru*\n\n` +
+      `Order ID: ${orderId.slice(0,8)}\n` +
+      `Template: ${document.getElementById('ob-tmpl').textContent}\n` +
+      `Dari: ${orderData.nama1} untuk ${orderData.nama2}\n` +
+      `Harga: ${document.getElementById('ob-price').textContent}\n` +
+      `Rujukan: ${ref}\n\n` +
+      `Tolong confirm! 🙏`
+    );
+    window.open(`https://wa.me/${PAYMENT_INFO.wa_num}?text=${msg}`, '_blank');
+
+  } catch (e) {
+    showToast('Gagal hantar rujukan', true);
+  }
+}
+
+// ── CONTACT WA ──
+function contactWa() {
+  const msg = encodeURIComponent(
+    `Helo! Saya nak buat kad digital.\nOrder ID: ${orderId.slice(0,8)}\nDari: ${orderData?.nama1} untuk ${orderData?.nama2}`
+  );
+  window.open(`https://wa.me/${PAYMENT_INFO.wa_num}?text=${msg}`, '_blank');
+}
+
+// ── POLL FOR PAYMENT ──
+let pollInterval = null;
+function startPolling() {
+  pollInterval = setInterval(async () => {
+    try {
+      const r = await fetch(`${SB}/rest/v1/orders?id=eq.${orderId}&select=status,gift_url`, {
+        headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
+      });
+      const [o] = await r.json();
+      if (o?.status === 'paid' && o?.gift_url) {
+        clearInterval(pollInterval);
+        document.getElementById('paid-link').textContent = o.gift_url;
+        showState('state-paid');
+      }
+    } catch (e) {}
+  }, 15000);
+}
+
+// ── UTILS ──
+function copyAcc() {
+  navigator.clipboard.writeText(PAYMENT_INFO.acc_num).then(() => showToast('No. akaun disalin!'));
+}
+
+function copyGiftLink() {
+  const link = document.getElementById('paid-link').textContent;
+  navigator.clipboard.writeText(link).then(() => showToast('Link disalin! 🎀'));
+}
+
+function openGiftLink() {
+  window.open(document.getElementById('paid-link').textContent, '_blank');
+}
+
+function showToast(msg, err = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (err ? ' err' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+load();
+</script>
+</body>
+</html>
